@@ -403,12 +403,31 @@
                     <div id="chat-setup"
                         style="padding: 20px; display: flex; flex-direction: column; gap: 15px; height: 100%; justify-content: center;">
                         <p style="font-size: 0.8rem; color: #888; text-align: center;">Enter OpenAI API Key for live
-                            intelligence, or leave empty for simulation mode.</p>
+                            intelligence.</p>
+
                         <input type="password" id="api-key-input" placeholder="sk-..."
                             style="background: #222; border: 1px solid #333; color: white; padding: 10px; border-radius: 4px; outline: none;">
-                        <button onclick="saveChatSettings()"
-                            style="background: var(--accent); color: black; border: none; padding: 10px; border-radius: 4px; font-weight: bold; cursor: pointer;">INITIALIZE
-                            LINK</button>
+
+                        <div style="display:flex; gap:10px;">
+                            <select id="model-select"
+                                style="flex-grow:1; background: #222; border: 1px solid #333; color: white; padding: 10px; border-radius: 4px; outline: none;">
+                                <option value="gpt-4o">GPT-4o</option>
+                                <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                                <option value="gpt-3.5-turbo" selected>GPT-3.5 Turbo</option>
+                            </select>
+                            <button onclick="fetchModels()" title="Refresh Models"
+                                style="background: #222; border: 1px solid #333; color: var(--accent); padding: 0 15px; border-radius: 4px; cursor: pointer;">↻</button>
+                        </div>
+
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="saveChatSettings()"
+                                style="flex-grow: 1; background: var(--accent); color: black; border: none; padding: 10px; border-radius: 4px; font-weight: bold; cursor: pointer;">CONNECT</button>
+                            <button onclick="clearChatSettings()" id="disconnect-btn"
+                                style="display:none; background: #331111; color: #ff4444; border: 1px solid #552222; padding: 10px; border-radius: 4px; font-weight: bold; cursor: pointer;">X</button>
+                        </div>
+
+                        <div id="model-msg"
+                            style="font-size: 0.7rem; color: #666; text-align: center; min-height: 1em;"></div>
                     </div>
 
                     <!-- View: Chat Interface -->
@@ -461,21 +480,100 @@
         updateClocks(); // Initial call
 
         // --- Weather Widget ---
+        // --- Weather Widget ---
+        function analyzeWeather(temp, wc) {
+            let condition = "Unknown";
+            let advice = "";
+
+            // 1. Decode Condition
+            if (wc === 0) condition = "Clear Sky";
+            else if (wc >= 1 && wc <= 3) condition = "Partly Cloudy";
+            else if (wc >= 45 && wc <= 48) condition = "Foggy";
+            else if (wc >= 51 && wc <= 55) condition = "Drizzle";
+            else if (wc >= 61 && wc <= 65) condition = "Rain";
+            else if (wc >= 71 && wc <= 77) condition = "Snow";
+            else if (wc >= 80 && wc <= 82) condition = "Showers";
+            else if (wc >= 95) condition = "Thunderstorm";
+
+            // 2. Generate Smart Advice
+            // Extreme Cold
+            if (temp <= -10) advice = "Hazardous cold. Thermal insulation mandatory.";
+            // Freezing
+            else if (temp <= 0) {
+                if (wc >= 71) advice = "Icy conditions. Tread carefully.";
+                else advice = "Freezing point. Layer up.";
+            }
+            // Cold (0-10)
+            else if (temp <= 10) {
+                if (wc >= 61) advice = "Cold & wet. Waterproof insulation required.";
+                else advice = "Chilly atmosphere. Jacket recommended.";
+            }
+            // Moderate (10-20)
+            else if (temp <= 20) {
+                if (wc === 0) advice = "Optimal operating conditions.";
+                else if (wc >= 51) advice = "Mild but damp. Light protection advised.";
+                else advice = "Standard conditions.";
+            }
+            // Warm (20-30)
+            else if (temp <= 30) {
+                if (wc === 0) advice = "Warm & clear. Ideal.";
+                else advice = "Warm & humid. Monitor comfort.";
+            }
+            // Hot (30+)
+            else advice = "High heat. Maintain hydration protocols.";
+
+            // Critical Overrides
+            if (wc >= 95) advice = "Electrical storm. Seek shelter immediately.";
+            if (wc === 45 || wc === 48) advice += " (Low visibility)";
+
+            return { condition, advice };
+        }
+
         async function initWeather() {
             try {
-                // 1. Get Location
-                const locRes = await fetch('https://ipapi.co/json/');
-                const locData = await locRes.json();
+                let lat, lon, city, country;
 
-                if (locData.city) {
-                    document.getElementById('weather-location').innerText = `${locData.city}, ${locData.country_code}`;
+                // 1. Get Location (Try ipapi.co first, then ipwho.is)
+                try {
+                    const locRes = await fetch('https://ipapi.co/json/');
+                    if (locRes.ok) {
+                        const locData = await locRes.json();
+                        if (!locData.error) {
+                            lat = locData.latitude;
+                            lon = locData.longitude;
+                            city = locData.city;
+                            country = locData.country_code;
+                        } else {
+                            throw new Error(locData.reason || "ipapi error");
+                        }
+                    } else {
+                        throw new Error("ipapi non-200");
+                    }
+                } catch (err) {
+                    console.warn("ipapi failed, trying ipwho.is...", err);
+                    // Fallback: ipwho.is
+                    const backupRes = await fetch('https://ipwho.is/');
+                    if (!backupRes.ok) throw new Error("Backup IP service failed");
+                    const backupData = await backupRes.json();
+                    if (!backupData.success) throw new Error(backupData.message);
+
+                    lat = backupData.latitude;
+                    lon = backupData.longitude;
+                    city = backupData.city;
+                    country = backupData.country_code;
+                }
+
+                if (city) {
+                    document.getElementById('weather-location').innerText = `${city}, ${country}`;
                 }
 
                 // 2. Get Weather
-                const lat = locData.latitude;
-                const lon = locData.longitude;
+                if (!lat || !lon) throw new Error("Coordinates not found");
+
                 // Using Open-Meteo API
                 const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                if (!weatherRes.ok) throw new Error("Weather API failed");
+
                 const weatherData = await weatherRes.json();
                 const current = weatherData.current_weather;
 
@@ -483,60 +581,137 @@
 
                 // Interpret wmo code
                 const wmo = current.weathercode;
-                let condition = "Unknown";
-                let advice = "Proceed with caution.";
+                const temp = Math.round(current.temperature);
 
-                // Simplified WMO codes
-                if (wmo === 0) { condition = "Clear Sky"; advice = "Optimal visibility. No protective gear needed."; }
-                else if (wmo >= 1 && wmo <= 3) { condition = "Partly Cloudy"; advice = "Standard operating conditions."; }
-                else if (wmo >= 45 && wmo <= 48) { condition = "Foggy"; advice = "Reduced visibility. Caution advised."; }
-                else if (wmo >= 51 && wmo <= 55) { condition = "Drizzle"; advice = "Light moisture detected. Hood recommended."; }
-                else if (wmo >= 61 && wmo <= 65) { condition = "Rain"; advice = "Precipitation active. Umbrella required."; }
-                else if (wmo >= 71 && wmo <= 77) { condition = "Snow"; advice = "Freezing temperatures. Thermal layers required."; }
-                else if (wmo >= 95) { condition = "Thunderstorm"; advice = "Electrical hazard. Stay indoors."; }
+                // Smart Analysis
+                const analysis = analyzeWeather(temp, wmo);
 
-                document.getElementById('weather-condition').innerText = condition;
-                document.getElementById('weather-advice').innerText = advice;
+                document.getElementById('weather-condition').innerText = analysis.condition;
+                document.getElementById('weather-advice').innerText = analysis.advice;
 
             } catch (error) {
                 console.error("Weather Error:", error);
-                document.getElementById('weather-location').innerText = "Location Error";
-                document.getElementById('weather-advice').innerText = "Unable to triangulate local atmosphere.";
+                document.getElementById('weather-location').innerText = "Signal Lost";
+                document.getElementById('weather-advice').innerText = "Error: " + error.message;
             }
         }
         initWeather();
 
         // --- Chatbot Widget ---
         let chatApiKey = localStorage.getItem('chat_api_key') || '';
+        let chatModel = localStorage.getItem('chat_model') || 'gpt-3.5-turbo';
+
         const chatSetup = document.getElementById('chat-setup');
         const chatInterface = document.getElementById('chat-interface');
         const chatInput = document.getElementById('chat-input');
         const chatMessages = document.getElementById('chat-messages');
+        const disconnectBtn = document.getElementById('disconnect-btn');
+        const modelSelect = document.getElementById('model-select');
+        const modelMsg = document.getElementById('model-msg');
+
+        // Restore selected model if exists
+        if (chatModel) {
+            // If the saved model isn't in the default list, add it
+            if (![...modelSelect.options].some(o => o.value === chatModel)) {
+                const opt = document.createElement('option');
+                opt.value = chatModel;
+                opt.text = chatModel;
+                modelSelect.add(opt);
+            }
+            modelSelect.value = chatModel;
+        }
 
         function toggleChatSettings() {
             if (chatSetup.style.display === 'flex') {
-                if (chatApiKey || chatInterface.style.display !== 'none') {
-                    chatSetup.style.display = 'none';
-                    chatInterface.style.display = 'flex';
-                }
+                // If we are in setup, only allow closing if we have a key (or if we want to cancel setup)
+                // But simplified: just toggle views
+                chatSetup.style.display = 'none';
+                chatInterface.style.display = 'flex';
             } else {
                 chatSetup.style.display = 'flex';
                 chatInterface.style.display = 'none';
+
+                // Show disconnect button if logged in
+                disconnectBtn.style.display = chatApiKey ? 'block' : 'none';
+                document.getElementById('api-key-input').value = chatApiKey;
+            }
+        }
+
+        async function fetchModels() {
+            const key = document.getElementById('api-key-input').value.trim() || chatApiKey;
+            if (!key) {
+                modelMsg.innerText = "API Key required to fetch models.";
+                return;
+            }
+
+            modelMsg.innerText = "Fetching models...";
+            try {
+                const res = await fetch('https://api.openai.com/v1/models', {
+                    headers: { 'Authorization': `Bearer ${key}` }
+                });
+
+                if (!res.ok) throw new Error("Failed to fetch");
+
+                const data = await res.json();
+                const models = data.data.filter(m => m.id.includes('gpt')).sort((a, b) => b.created - a.created);
+
+                // Clear and repopulate
+                modelSelect.innerHTML = '';
+                models.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m.id;
+                    opt.innerText = m.id;
+                    modelSelect.appendChild(opt);
+                });
+
+                modelMsg.innerText = `${models.length} models found.`;
+                modelMsg.style.color = "#00ff88";
+
+            } catch (e) {
+                modelMsg.innerText = "Error fetching models. Using defaults.";
+                modelMsg.style.color = "#ff4444";
             }
         }
 
         function saveChatSettings() {
             const key = document.getElementById('api-key-input').value.trim();
+            const model = modelSelect.value;
+
             if (key) {
                 chatApiKey = key;
+                chatModel = model;
                 localStorage.setItem('chat_api_key', key);
+                localStorage.setItem('chat_model', model);
+                disconnectBtn.style.display = 'block';
+                appendMessage('system', `Linked to ${model}.`);
             } else {
-                chatApiKey = '';
-                // Allow empty key for mock mode
+                // Mock mode logic if needed, or just warn
+                if (!chatApiKey) appendMessage('system', "Simulation mode active (No Key).");
             }
+
             chatSetup.style.display = 'none';
             chatInterface.style.display = 'flex';
-            appendMessage('system', key ? "Secure link established." : "Simulation mode active.");
+        }
+
+        function clearChatSettings() {
+            chatApiKey = '';
+            localStorage.removeItem('chat_api_key');
+            document.getElementById('api-key-input').value = '';
+            disconnectBtn.style.display = 'none';
+            appendMessage('system', "Link severed. Data cleared.");
+        }
+
+        // Auto-load if key exists
+        if (chatApiKey) {
+            document.getElementById('api-key-input').value = chatApiKey;
+            disconnectBtn.style.display = 'block';
+            chatSetup.style.display = 'none';
+            chatInterface.style.display = 'flex';
+        } else {
+            // Show setup by default if no key? No, show empty chat or setup? 
+            // Let's show setup if no key is present initially
+            chatSetup.style.display = 'flex';
+            chatInterface.style.display = 'none';
         }
 
         // Auto-load if key exists
@@ -594,17 +769,26 @@
 
                 if (chatApiKey) {
                     // REAL CALL (OpenAI)
+                    const payload = {
+                        model: chatModel,
+                        messages: [{ role: "user", content: text }]
+                    };
+
+                    // New o1 models and some future models use 'max_completion_tokens'
+                    // Older models use 'max_tokens'
+                    if (chatModel.startsWith('o1')) {
+                        payload.max_completion_tokens = 1500; // o1 usually needs more room for reasoning
+                    } else {
+                        payload.max_tokens = 150;
+                    }
+
                     const res = await fetch('https://api.openai.com/v1/chat/completions', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${chatApiKey}`
                         },
-                        body: JSON.stringify({
-                            model: "gpt-3.5-turbo",
-                            messages: [{ role: "user", content: text }],
-                            max_tokens: 150
-                        })
+                        body: JSON.stringify(payload)
                     });
                     const data = await res.json();
                     if (data.error) throw new Error(data.error.message);
