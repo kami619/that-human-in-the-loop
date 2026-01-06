@@ -2,7 +2,7 @@
     "meta": {
         "source": "Berkeley Function-Calling Leaderboard (BFCL) V4",
         "url": "https://gorilla.cs.berkeley.edu/leaderboard.html",
-        "last_updated": "2025-12-16",
+        "last_updated": "2026-01-06",
         "description": "Evaluates LLM ability to call functions/tools accurately"
     },
     "leaderboard": [
@@ -29,7 +29,7 @@
         },
         {
             "rank": 4,
-            "model": "GLM-4.6 (thinking)",
+            "model": "GLM-4.6",
             "provider": "Zhipu AI",
             "accuracy": 72.38,
             "type": "FC"
@@ -45,7 +45,7 @@
             "rank": 6,
             "model": "Claude-Haiku-4-5-20251001",
             "provider": "Anthropic",
-            "accuracy": 68.70,
+            "accuracy": 68.7,
             "type": "FC"
         },
         {
@@ -74,6 +74,76 @@
             "model": "Grok-4-0709",
             "provider": "xAI",
             "accuracy": 61.38,
+            "type": "FC"
+        },
+        {
+            "rank": 11,
+            "model": "Moonshotai-Kimi-K2-Instruct",
+            "provider": "MoonshotAI",
+            "accuracy": 59.06,
+            "type": "FC"
+        },
+        {
+            "rank": 12,
+            "model": "Grok-4-1-fast-non-reasoning",
+            "provider": "xAI",
+            "accuracy": 58.29,
+            "type": "FC"
+        },
+        {
+            "rank": 13,
+            "model": "Command A Reasoning",
+            "provider": "Cohere",
+            "accuracy": 57.06,
+            "type": "FC"
+        },
+        {
+            "rank": 14,
+            "model": "DeepSeek-V3.2-Exp",
+            "provider": "DeepSeek",
+            "accuracy": 56.73,
+            "type": "Prompt"
+        },
+        {
+            "rank": 15,
+            "model": "Gemini-2.5-Flash",
+            "provider": "Google",
+            "accuracy": 56.24,
+            "type": "FC"
+        },
+        {
+            "rank": 16,
+            "model": "GPT-5.2-2025-12-11",
+            "provider": "OpenAI",
+            "accuracy": 55.87,
+            "type": "FC"
+        },
+        {
+            "rank": 17,
+            "model": "GPT-5-mini-2025-08-07",
+            "provider": "OpenAI",
+            "accuracy": 55.46,
+            "type": "FC"
+        },
+        {
+            "rank": 18,
+            "model": "xLAM-2-32b-fc-r",
+            "provider": "Salesforce",
+            "accuracy": 54.66,
+            "type": "FC"
+        },
+        {
+            "rank": 19,
+            "model": "DeepSeek-V3.2-Exp",
+            "provider": "DeepSeek",
+            "accuracy": 54.12,
+            "type": "FC"
+        },
+        {
+            "rank": 20,
+            "model": "GPT-4.1-2025-04-14",
+            "provider": "OpenAI",
+            "accuracy": 53.96,
             "type": "FC"
         }
     ]
