@@ -245,11 +245,11 @@
                 </style>
             </div>
 
-            <!-- 3. LLM Arena Widget -->
+            <!-- 3. BFCL Tool Calling Leaderboard Widget -->
             <div class="card row-span-2" id="widget-arena">
                 <div class="card-header">
-                    <span class="card-title">Intelligence Arena</span>
-                    <span style="font-size: 0.7rem; color: #666;">LIVE RANKING</span>
+                    <span class="card-title">🔧 Tool Calling Arena</span>
+                    <span style="font-size: 0.7rem; color: #666;">BFCL V4</span>
                 </div>
                 <div class="card-content">
                     <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
@@ -257,42 +257,27 @@
                             <tr style="border-bottom: 1px solid #333; text-align: left;">
                                 <th style="padding: 8px 4px; color: #888;">#</th>
                                 <th style="padding: 8px 4px; color: #888;">MODEL</th>
-                                <th style="padding: 8px 4px; text-align: right; color: #888;">ELO</th>
+                                <th style="padding: 8px 4px; text-align: right; color: #888;">ACC %</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr style="border-bottom: 1px solid #222;">
-                                <td style="padding: 10px 4px; color: var(--accent);">1</td>
-                                <td style="padding: 10px 4px;">SearchGPT / GPT-4o</td>
-                                <td style="padding: 10px 4px; text-align: right;">1320</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #222;">
-                                <td style="padding: 10px 4px; color: var(--accent);">2</td>
-                                <td style="padding: 10px 4px;">Gemini 1.5 Pro</td>
-                                <td style="padding: 10px 4px; text-align: right;">1301</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #222;">
-                                <td style="padding: 10px 4px; color: var(--accent);">3</td>
-                                <td style="padding: 10px 4px;">Claude 3.5 Sonnet</td>
-                                <td style="padding: 10px 4px; text-align: right;">1288</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #222;">
-                                <td style="padding: 10px 4px;">4</td>
-                                <td style="padding: 10px 4px;">Llama 3.1 405B</td>
-                                <td style="padding: 10px 4px; text-align: right;">1265</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #222;">
-                                <td style="padding: 10px 4px;">5</td>
-                                <td style="padding: 10px 4px;">GPT-4 Turbo</td>
-                                <td style="padding: 10px 4px; text-align: right;">1255</td>
+                        <tbody id="bfcl-tbody">
+                            <tr>
+                                <td colspan="3" style="padding: 20px; text-align: center; color: #555;">Loading...</td>
                             </tr>
                         </tbody>
                     </table>
-                    <div style="margin-top: 15px; font-size: 0.7rem; color: #555; text-align: center;">
-                        *Updated daily via scale/elo
+                    <div style="margin-top: 15px; text-align: center;">
+                        <a href="https://gorilla.cs.berkeley.edu/leaderboard.html" target="_blank"
+                            style="font-size: 0.75rem; color: var(--accent); text-decoration: none;">
+                            View Full BFCL Leaderboard →
+                        </a>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.65rem; color: #444; text-align: center;">
+                        Berkeley Function-Calling Leaderboard
                     </div>
                 </div>
             </div>
+
 
             <!-- 4. Major Indices Widget (Wide) -->
             <div class="card col-span-2" id="widget-indices">
@@ -537,6 +522,36 @@
             }
         }
         initWeather();
+
+        // --- BFCL Leaderboard Widget ---
+        async function initBFCL() {
+            try {
+                const response = await fetch('bfcl-leaderboard.json');
+                if (!response.ok) throw new Error('Failed to load leaderboard data');
+
+                const data = await response.json();
+                const tbody = document.getElementById('bfcl-tbody');
+
+                // Render top 6 models
+                const models = data.leaderboard.slice(0, 6);
+                tbody.innerHTML = models.map((m, i) => `
+                    <tr style="border-bottom: 1px solid #222;">
+                        <td style="padding: 10px 4px; ${i < 3 ? 'color: var(--accent);' : ''}">${m.rank}</td>
+                        <td style="padding: 10px 4px;">
+                            <span style="color: #999; font-size: 0.7rem;">${m.provider}</span><br>
+                            ${m.model}
+                        </td>
+                        <td style="padding: 10px 4px; text-align: right; ${i < 3 ? 'color: var(--accent);' : ''}">${m.accuracy.toFixed(1)}</td>
+                    </tr>
+                `).join('');
+
+            } catch (error) {
+                console.error('BFCL Error:', error);
+                document.getElementById('bfcl-tbody').innerHTML =
+                    '<tr><td colspan="3" style="padding: 20px; text-align: center; color: #f66;">Failed to load</td></tr>';
+            }
+        }
+        initBFCL();
 
 
     </script>

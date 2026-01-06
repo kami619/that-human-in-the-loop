@@ -1,0 +1,80 @@
+{
+    "meta": {
+        "source": "Berkeley Function-Calling Leaderboard (BFCL) V4",
+        "url": "https://gorilla.cs.berkeley.edu/leaderboard.html",
+        "last_updated": "2025-12-16",
+        "description": "Evaluates LLM ability to call functions/tools accurately"
+    },
+    "leaderboard": [
+        {
+            "rank": 1,
+            "model": "Claude-Opus-4-5-20251101",
+            "provider": "Anthropic",
+            "accuracy": 77.47,
+            "type": "FC"
+        },
+        {
+            "rank": 2,
+            "model": "Claude-Sonnet-4-5-20250929",
+            "provider": "Anthropic",
+            "accuracy": 73.24,
+            "type": "FC"
+        },
+        {
+            "rank": 3,
+            "model": "Gemini-3-Pro-Preview",
+            "provider": "Google",
+            "accuracy": 72.51,
+            "type": "Prompt"
+        },
+        {
+            "rank": 4,
+            "model": "GLM-4.6 (thinking)",
+            "provider": "Zhipu AI",
+            "accuracy": 72.38,
+            "type": "FC"
+        },
+        {
+            "rank": 5,
+            "model": "Grok-4-1-fast-reasoning",
+            "provider": "xAI",
+            "accuracy": 69.57,
+            "type": "FC"
+        },
+        {
+            "rank": 6,
+            "model": "Claude-Haiku-4-5-20251001",
+            "provider": "Anthropic",
+            "accuracy": 68.70,
+            "type": "FC"
+        },
+        {
+            "rank": 7,
+            "model": "Gemini-3-Pro-Preview",
+            "provider": "Google",
+            "accuracy": 68.14,
+            "type": "FC"
+        },
+        {
+            "rank": 8,
+            "model": "o3-2025-04-16",
+            "provider": "OpenAI",
+            "accuracy": 63.05,
+            "type": "Prompt"
+        },
+        {
+            "rank": 9,
+            "model": "Grok-4-0709",
+            "provider": "xAI",
+            "accuracy": 62.97,
+            "type": "Prompt"
+        },
+        {
+            "rank": 10,
+            "model": "Grok-4-0709",
+            "provider": "xAI",
+            "accuracy": 61.38,
+            "type": "FC"
+        }
+    ]
+}
