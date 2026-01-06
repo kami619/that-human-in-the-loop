@@ -29,8 +29,8 @@
         /* The "Loop" Container */
         .orchestrator {
             position: relative;
-            width: 400px;
-            height: 400px;
+            width: 500px;
+            height: 500px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -66,49 +66,159 @@
 
         .content {
             z-index: 10;
-            opacity: 0.4;
+            opacity: 0.7;
             transition: opacity 0.4s ease;
+            padding: 50px 40px;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .orchestrator:hover .content {
             opacity: 1;
         }
 
-        h1 {
-            font-size: 1.2rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
+        /* Quote styles inside the loop */
+        .quote-container {
+            position: relative;
+            min-height: 110px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        input[type="email"] {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #333;
+        .quote-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .quote {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            opacity: 0;
+            animation: fadeQuote 60s infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quote-text {
+            font-size: 1.05rem;
+            font-style: italic;
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0 0 10px 0;
+        }
+
+        .quote-text::before {
+            content: '"';
             color: var(--accent);
-            padding: 10px;
-            width: 200px;
-            text-align: center;
-            outline: none;
-            transition: border-color 0.4s;
+            opacity: 0.5;
         }
 
-        input:focus {
-            border-color: var(--accent);
+        .quote-text::after {
+            content: '"';
+            color: var(--accent);
+            opacity: 0.5;
+        }
+
+        .quote-author {
+            font-size: 0.7rem;
+            color: var(--accent);
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .quote-author span {
+            color: #666;
+        }
+
+        @keyframes fadeQuote {
+
+            0%,
+            18% {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            2%,
+            16% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            20%,
+            100% {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+        }
+
+        .quote:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .quote:nth-child(2) {
+            animation-delay: 12s;
+        }
+
+        .quote:nth-child(3) {
+            animation-delay: 24s;
+        }
+
+        .quote:nth-child(4) {
+            animation-delay: 36s;
+        }
+
+        .quote:nth-child(5) {
+            animation-delay: 48s;
+        }
+
+        .quote-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 25px;
+        }
+
+        .quote-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #333;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .quote-dot:hover {
+            background: #555;
+        }
+
+        .quote-dot.active {
+            background: var(--accent);
+            box-shadow: 0 0 6px var(--accent);
         }
 
         .dashboard-link {
             display: inline-block;
             color: var(--accent);
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.65rem;
             border: 1px solid var(--accent);
-            padding: 8px 16px;
+            padding: 6px 14px;
             border-radius: 4px;
             transition: all 0.3s ease;
             box-shadow: 0 0 5px rgba(0, 255, 136, 0.2);
             background: rgba(0, 255, 136, 0.05);
             letter-spacing: 1px;
+            margin-top: 25px;
         }
 
         .dashboard-link:hover {
@@ -118,12 +228,15 @@
             transform: translateY(-2px);
         }
 
-        .status {
-            position: absolute;
-            bottom: -60px;
-            font-size: 0.7rem;
-            color: #666;
+        .status-text {
+            font-size: 0.55rem;
+            color: #555;
             text-transform: uppercase;
+            margin-top: 12px;
+        }
+
+        .status-text span {
+            color: #666;
         }
 
         /* Subtle Scanline Effect */
@@ -139,10 +252,92 @@
             background-size: 100% 2px, 3px 100%;
             pointer-events: none;
         }
+
+        /* Hidden form - keeping backend logic */
+        #waitlist-form {
+            display: none;
+        }
+
+        /* Page Header with expanding animation */
+        .page-header {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+        }
+
+        .header-word {
+            display: inline-flex;
+            overflow: hidden;
+        }
+
+        .header-word .expand {
+            display: inline-block;
+            max-width: 0;
+            opacity: 0;
+            transition: max-width 0.6s ease-out, opacity 0.4s ease-out;
+            white-space: nowrap;
+        }
+
+        .header-word .expand.visible {
+            opacity: 1;
+        }
+
+        .header-word .letter {
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent);
+        }
+
+        .header-space {
+            width: 0;
+            transition: width 0.3s ease-out;
+        }
+
+        .header-space.visible {
+            width: 0.4em;
+        }
     </style>
 </head>
 
 <body>
+
+    <!-- Dynamic expanding header -->
+    <header class="page-header">
+        <h1 class="header-title">
+            <span class="header-word">
+                <span class="letter">T</span><span class="expand" data-text="hat">hat</span>
+            </span>
+            <span class="header-space"></span>
+            <span class="header-word">
+                <span class="letter">H</span><span class="expand" data-text="uman">uman</span>
+            </span>
+            <span class="header-space"></span>
+            <span class="header-word">
+                <span class="letter">I</span><span class="expand" data-text="n">n</span>
+            </span>
+            <span class="header-space"></span>
+            <span class="header-word">
+                <span class="letter">T</span><span class="expand" data-text="he">he</span>
+            </span>
+            <span class="header-space"></span>
+            <span class="header-word">
+                <span class="letter">L</span><span class="expand" data-text="oop">oop</span>
+            </span>
+        </h1>
+    </header>
 
     <div class="orchestrator">
         <svg class="loop-svg" viewBox="0 0 100 100">
@@ -150,49 +345,140 @@
         </svg>
 
         <div class="content">
-            <h1>That Human <br>is the Loop.</h1>
-            <p style="font-size: 0.8rem; color: #888; margin-bottom: 30px;">
-                Agents are idle. Awaiting instruction.
-            </p>
-            <form id="waitlist-form">
-                <input type="email" id="email" placeholder="ENTER_EMAIL_TO_JOIN" required>
-                <button type="submit" style="display:none;"></button>
-            </form>
-            <div id="response-msg" style="margin-top: 10px; font-size: 0.7rem;"></div>
-
-            <script>
-                document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const email = document.getElementById('email').value;
-                    const msg = document.getElementById('response-msg');
-
-                    msg.innerText = "SYNCHRONIZING...";
-
-                    const response = await fetch('/api/subscribe', {
-                        method: 'POST',
-                        body: JSON.stringify({ email }),
-                        headers: { 'Content-Type': 'application/json' }
-                    });
-
-                    if (response.ok) {
-                        msg.innerText = "HUMAN_VERIFIED. WELCOME TO THE LOOP.";
-                        document.getElementById('email').style.display = 'none';
-                    } else {
-                        msg.innerText = "ERROR: LOOP_INTERRUPTED.";
-                    }
-                });
-            </script>
-        </div>
-
-        <div class="status">
-            System Status: <span style="color: var(--accent);">Waiting for Human Interaction</span>
-            <div style="margin-top: 15px;">
-                <a href="dashboard.html" class="dashboard-link">
-                    ENTER DASHBOARD
-                </a>
+            <!-- Quotes inside the loop -->
+            <div class="quote-container">
+                <div class="quote-wrapper" id="quote-wrapper">
+                    <div class="quote active" data-index="0">
+                        <p class="quote-text">The best engineers are obsessed with solving user problems.</p>
+                        <p class="quote-author">— Addy Osmani <span>// Google</span></p>
+                    </div>
+                    <div class="quote" data-index="1">
+                        <p class="quote-text">Clarity is seniority. Cleverness is overhead.</p>
+                        <p class="quote-author">— Addy Osmani <span>// Google</span></p>
+                    </div>
+                    <div class="quote" data-index="2">
+                        <p class="quote-text">Your code doesn't advocate for you. People do.</p>
+                        <p class="quote-author">— Addy Osmani <span>// Google</span></p>
+                    </div>
+                    <div class="quote" data-index="3">
+                        <p class="quote-text">The work that makes other work possible is priceless — and invisible.</p>
+                        <p class="quote-author">— Addy Osmani <span>// Google</span></p>
+                    </div>
+                    <div class="quote" data-index="4">
+                        <p class="quote-text">There are no shortcuts, but there is compounding.</p>
+                        <p class="quote-author">— Addy Osmani <span>// Google</span></p>
+                    </div>
+                </div>
             </div>
+
+            <div class="quote-dots" id="quote-dots">
+                <div class="quote-dot active" data-index="0"></div>
+                <div class="quote-dot" data-index="1"></div>
+                <div class="quote-dot" data-index="2"></div>
+                <div class="quote-dot" data-index="3"></div>
+                <div class="quote-dot" data-index="4"></div>
+            </div>
+
+            <a href="dashboard.html" class="dashboard-link">
+                ENTER DASHBOARD
+            </a>
+
+            <p class="status-text">System Status: <span>Waiting for Human Interaction</span></p>
         </div>
     </div>
+
+    <!-- Hidden form - backend logic preserved -->
+    <form id="waitlist-form">
+        <input type="email" id="email" placeholder="ENTER_EMAIL_TO_JOIN" required>
+        <button type="submit" style="display:none;"></button>
+    </form>
+    <div id="response-msg" style="display: none;"></div>
+
+    <script>
+        // Waitlist form backend logic (preserved)
+        document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const msg = document.getElementById('response-msg');
+
+            msg.innerText = "SYNCHRONIZING...";
+
+            const response = await fetch('/api/subscribe', {
+                method: 'POST',
+                body: JSON.stringify({ email }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (response.ok) {
+                msg.innerText = "HUMAN_VERIFIED. WELCOME TO THE LOOP.";
+                document.getElementById('email').style.display = 'none';
+            } else {
+                msg.innerText = "ERROR: LOOP_INTERRUPTED.";
+            }
+        });
+
+        // Quote rotation with dot indicator
+        const quotes = document.querySelectorAll('.quote');
+        const dots = document.querySelectorAll('.quote-dot');
+        let currentQuote = 0;
+        const totalQuotes = quotes.length;
+        const interval = 12000; // 12 seconds per quote
+
+        function updateDots() {
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentQuote);
+            });
+        }
+
+        setInterval(() => {
+            currentQuote = (currentQuote + 1) % totalQuotes;
+            updateDots();
+        }, interval);
+
+        // Allow clicking on dots to change quote
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                quotes.forEach(q => {
+                    q.style.animation = 'none';
+                    q.offsetHeight; // Trigger reflow
+                });
+                currentQuote = index;
+                quotes.forEach((q, i) => {
+                    q.style.animation = '';
+                    q.style.animationDelay = `${(i - currentQuote + totalQuotes) % totalQuotes * 12}s`;
+                });
+                updateDots();
+            });
+        });
+
+        // Header expansion animation - "The HITL" -> "That Human In The Loop"
+        function expandHeader() {
+            const expandElements = document.querySelectorAll('.header-word .expand');
+            const spaces = document.querySelectorAll('.header-space');
+
+            // Animate each word expansion with stagger
+            expandElements.forEach((el, index) => {
+                setTimeout(() => {
+                    // Calculate width based on text content
+                    const text = el.getAttribute('data-text');
+                    el.style.maxWidth = (text.length * 0.7) + 'em';
+                    el.classList.add('visible');
+                }, 800 + (index * 150)); // Stagger each letter expansion
+            });
+
+            // Show spaces between words
+            spaces.forEach((space, index) => {
+                setTimeout(() => {
+                    space.classList.add('visible');
+                }, 800 + (index * 150));
+            });
+        }
+
+        // Trigger animation after page load
+        window.addEventListener('load', () => {
+            setTimeout(expandHeader, 500);
+        });
+    </script>
 
 </body>
 
