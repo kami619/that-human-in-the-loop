@@ -239,14 +239,26 @@
             color: #666;
         }
 
+        /* Chess Matrix Canvas */
+        #chess-matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+
         /* Subtle Scanline Effect */
         body::after {
             content: " ";
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             bottom: 0;
             right: 0;
+            z-index: 1000;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
                 linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
             background-size: 100% 2px, 3px 100%;
@@ -313,6 +325,8 @@
 </head>
 
 <body>
+
+    <canvas id="chess-matrix-canvas"></canvas>
 
     <!-- Dynamic expanding header -->
     <header class="page-header">
@@ -478,6 +492,336 @@
         window.addEventListener('load', () => {
             setTimeout(expandHeader, 500);
         });
+
+        // Chess Board Animation
+        (function () {
+            const canvas = document.getElementById('chess-matrix-canvas');
+            const ctx = canvas.getContext('2d');
+
+            // --- Game Data (3 real games from cyberwolfstudios) ---
+            const GAMES = [
+                ["e4","e5","Qh5","g6","Qxe5+","Be7","Qxh8","Kf8","Qxh7","d6","Bc4","Nc6","Qxf7#"],
+                ["e4","b6","Qh5","Na6","e5","Rb8","Bxa6","Bxa6","a4","b5","Qf3","c6","axb5","Rxb5",
+                 "Na3","Rxe5+","Kd1","e6","b4","Rf5","Rb1","Rxf3","gxf3","Bb7","Rb3","c5","Rc3","Nf6",
+                 "bxc5","Nh5","d4","g6","c6","dxc6","Rc5","Qd6","Re5","c5","Nh3","Bxf3+","Ke1","Qxd4",
+                 "Rxe6+","Be7","Rxe7+","Kxe7","Nb5","Qe5+","Kf1","Rb8","Nxa7","Rb1","Kg1","Rxc1#"],
+                ["e4","e5","d3","Nc6","Nh3","Nf6","f3","d6","Nc3","Nd4","a4","Bxh3","gxh3","d5",
+                 "Rg1","dxe4","dxe4","Bb4","Bb5+","Ke7","Rxg7","Qf8","Rg5","Qh6","f4","Qxh3",
+                 "fxe5","Nxe4","Bf1","Nxc3","Qxd4","Qxh2","Qxb4+","Kd7","Rg2","Qh4+","Rf2","Qxb4",
+                 "Bh3+","Kd8","Bg5+","Ke8","bxc3","Qxc3+","Ke2","Qxa1","Bf6","Rg8","Rf4","Qa3",
+                 "c3","Qxc3","Rf3","Qa5","Rd3","Qxa4","Bd7+","Kf8","e6","Rd8","exf7","Kxf7",
+                 "Bxa4","Kxf6","Rf3+","Ke7","Bb3","Rg2+","Kf1","Rh2","Kg1","Rdd2","Re3+","Kd7",
+                 "Be6+","Kd6","Bf5","Rhf2","Rd3+","Ke5","Rxd2","Rxd2","Bh3","a5","Kf1","a4",
+                 "Ke1","Rd4","Bg4","a3","Be2","a2","Bb5","a1=Q+","Ke2","c6","Bxc6","bxc6",
+                 "Ke3","Kd5","Kf3","Qc3+","Ke2","Rd2+","Kf1","Qc1#"]
+            ];
+
+            const WP = '♙', WR = '♖', WN = '♘', WB = '♗', WQ = '♕', WK = '♔';
+            const BP = '♟', BR = '♜', BN = '♞', BB = '♝', BQ = '♛', BK = '♚';
+            const WHITE_PIECES = WK + WQ + WR + WB + WN + WP;
+
+            const INITIAL_BOARD = [
+                [BR,BN,BB,BQ,BK,BB,BN,BR],
+                [BP,BP,BP,BP,BP,BP,BP,BP],
+                [null,null,null,null,null,null,null,null],
+                [null,null,null,null,null,null,null,null],
+                [null,null,null,null,null,null,null,null],
+                [null,null,null,null,null,null,null,null],
+                [WP,WP,WP,WP,WP,WP,WP,WP],
+                [WR,WN,WB,WQ,WK,WB,WN,WR]
+            ];
+
+            // Animation frame counts (~60fps)
+            const F_IDLE = 72, F_FLICKER = 18, F_DISSOLVE = 12, F_MATERIALIZE = 18, F_GLOW = 12, F_RESET = 30;
+
+            let board, boardSize, sqSize, bx, by;
+            let curGame = 0, curMove = 0;
+            let anim = { phase: 'IDLE', t: 0, from: null, to: null, piece: null, captured: null, castle: null, promotion: null };
+
+            function cloneBoard(b) { return b.map(r => r.slice()); }
+
+            // --- Move Parser ---
+            function isPathClear(b, fr, fc, tr, tc) {
+                const dr = Math.sign(tr - fr), dc = Math.sign(tc - fc);
+                let r = fr + dr, c = fc + dc;
+                while (r !== tr || c !== tc) {
+                    if (b[r][c]) return false;
+                    r += dr; c += dc;
+                }
+                return true;
+            }
+
+            function canReach(pt, fr, fc, tr, tc, isW, b, isCap) {
+                const dr = tr - fr, dc = tc - fc;
+                if (!dr && !dc) return false;
+                switch (pt) {
+                    case 'K': return Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
+                    case 'N': return Math.abs(dr) + Math.abs(dc) === 3 && Math.abs(dr) * Math.abs(dc) === 2;
+                    case 'R': return (dr === 0 || dc === 0) && isPathClear(b, fr, fc, tr, tc);
+                    case 'B': return Math.abs(dr) === Math.abs(dc) && isPathClear(b, fr, fc, tr, tc);
+                    case 'Q': return ((dr === 0 || dc === 0) || Math.abs(dr) === Math.abs(dc)) && isPathClear(b, fr, fc, tr, tc);
+                    case 'P':
+                        if (isW) {
+                            if (!isCap) return dc === 0 && ((dr === -1 && !b[tr][tc]) || (dr === -2 && fr === 6 && !b[fr-1][fc] && !b[tr][tc]));
+                            return dr === -1 && Math.abs(dc) === 1;
+                        } else {
+                            if (!isCap) return dc === 0 && ((dr === 1 && !b[tr][tc]) || (dr === 2 && fr === 1 && !b[fr+1][fc] && !b[tr][tc]));
+                            return dr === 1 && Math.abs(dc) === 1;
+                        }
+                }
+                return false;
+            }
+
+            function parseMove(str, b, isW) {
+                let s = str.replace(/[+#]/g, '');
+
+                // Castling
+                if (s === 'O-O' || s === 'O-O-O') {
+                    const row = isW ? 7 : 0, ks = s === 'O-O';
+                    return { from: [row, 4], to: [row, ks ? 6 : 2], piece: isW ? WK : BK, captured: null, castle: ks ? 'K' : 'Q', promotion: null };
+                }
+
+                // Promotion
+                let promo = null;
+                if (s.includes('=')) {
+                    const pm = { Q: isW ? WQ : BQ, R: isW ? WR : BR, B: isW ? WB : BB, N: isW ? WN : BN };
+                    promo = pm[s.split('=')[1]] || (isW ? WQ : BQ);
+                    s = s.split('=')[0];
+                }
+
+                // Piece type
+                let pt, isPawn = false;
+                if ('KQRBN'.includes(s[0])) { pt = s[0]; s = s.substring(1); }
+                else { isPawn = true; pt = 'P'; }
+
+                // Capture
+                const isCapture = s.includes('x');
+                s = s.replace('x', '');
+
+                // Destination: last two chars
+                const df = s.charCodeAt(s.length - 2) - 97;
+                const dr = 8 - parseInt(s[s.length - 1]);
+
+                // Disambiguation
+                let disambigF = -1, disambigR = -1;
+                const dis = s.substring(0, s.length - 2);
+                for (const c of dis) {
+                    if (c >= 'a' && c <= 'h') disambigF = c.charCodeAt(0) - 97;
+                    else if (c >= '1' && c <= '8') disambigR = 8 - parseInt(c);
+                }
+
+                // Map piece
+                const pm = isW ? { K: WK, Q: WQ, R: WR, B: WB, N: WN, P: WP } : { K: BK, Q: BQ, R: BR, B: BB, N: BN, P: BP };
+                const piece = pm[pt];
+
+                // Find source square
+                let from = null;
+                for (let r = 0; r < 8 && !from; r++) {
+                    for (let c = 0; c < 8 && !from; c++) {
+                        if (b[r][c] !== piece) continue;
+                        if (disambigF >= 0 && c !== disambigF) continue;
+                        if (disambigR >= 0 && r !== disambigR) continue;
+                        if (canReach(pt, r, c, dr, df, isW, b, isCapture)) from = [r, c];
+                    }
+                }
+
+                // Captured piece (handle en passant for pawns)
+                let captured = b[dr][df];
+                if (isPawn && isCapture && !captured && from) {
+                    captured = b[from[0]][df]; // en passant
+                }
+
+                return { from, to: [dr, df], piece, captured, castle: null, promotion: promo, enPassant: isPawn && isCapture && !b[dr][df] };
+            }
+
+            function applyMove(b, m) {
+                if (m.castle) {
+                    const row = m.from[0];
+                    b[m.to[0]][m.to[1]] = m.piece;
+                    b[m.from[0]][m.from[1]] = null;
+                    if (m.castle === 'K') { b[row][5] = b[row][7]; b[row][7] = null; }
+                    else { b[row][3] = b[row][0]; b[row][0] = null; }
+                    return;
+                }
+                if (m.enPassant && m.from) b[m.from[0]][m.to[1]] = null;
+                b[m.to[0]][m.to[1]] = m.promotion || m.piece;
+                if (m.from) b[m.from[0]][m.from[1]] = null;
+            }
+
+            // --- Renderer ---
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                boardSize = Math.min(canvas.width, canvas.height) * 0.75;
+                sqSize = boardSize / 8;
+                bx = (canvas.width - boardSize) / 2;
+                by = (canvas.height - boardSize) / 2;
+            }
+
+            function drawBoard() {
+                for (let r = 0; r < 8; r++) {
+                    for (let c = 0; c < 8; c++) {
+                        ctx.fillStyle = (r + c) % 2 === 0 ? 'rgba(0,255,136,0.07)' : 'rgba(0,255,136,0.03)';
+                        ctx.fillRect(bx + c * sqSize, by + r * sqSize, sqSize, sqSize);
+                    }
+                }
+                ctx.strokeStyle = 'rgba(0,255,136,0.15)';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(bx, by, boardSize, boardSize);
+            }
+
+            function drawCoords() {
+                ctx.font = (sqSize * 0.18) + 'px Courier New';
+                ctx.fillStyle = 'rgba(0,255,136,0.12)';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'top';
+                for (let c = 0; c < 8; c++) ctx.fillText('abcdefgh'[c], bx + c * sqSize + sqSize / 2, by + boardSize + 4);
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'middle';
+                for (let r = 0; r < 8; r++) ctx.fillText(8 - r, bx - 6, by + r * sqSize + sqSize / 2);
+            }
+
+            function drawPieceAt(piece, row, col, opacity, xOff) {
+                ctx.globalAlpha = opacity;
+                ctx.fillStyle = WHITE_PIECES.includes(piece) ? 'rgba(0,255,136,0.6)' : 'rgba(0,255,136,0.35)';
+                ctx.font = (sqSize * 0.7) + 'px serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(piece, bx + col * sqSize + sqSize / 2 + xOff, by + row * sqSize + sqSize / 2);
+                ctx.globalAlpha = 1;
+            }
+
+            function drawPieces() {
+                const a = anim;
+                for (let r = 0; r < 8; r++) {
+                    for (let c = 0; c < 8; c++) {
+                        if (!board[r][c]) continue;
+                        // Skip squares being animated
+                        if (a.from && (a.phase === 'FLICKER' || a.phase === 'DISSOLVE') && r === a.from[0] && c === a.from[1]) continue;
+                        if (a.to && a.phase === 'MATERIALIZE' && r === a.to[0] && c === a.to[1]) continue;
+                        drawPieceAt(board[r][c], r, c, 1, 0);
+                    }
+                }
+            }
+
+            function drawSquareGlow(row, col, intensity) {
+                ctx.save();
+                ctx.shadowColor = '#00ff88';
+                ctx.shadowBlur = 15 * intensity;
+                ctx.fillStyle = 'rgba(0,255,136,' + (0.1 * intensity) + ')';
+                ctx.fillRect(bx + col * sqSize, by + row * sqSize, sqSize, sqSize);
+                ctx.restore();
+            }
+
+            function drawAnim() {
+                const a = anim;
+                if (a.phase === 'FLICKER' && a.from) {
+                    const visible = Math.random() > 0.4;
+                    if (visible) {
+                        const jitter = Math.sin(a.t * 30) * (sqSize * 0.04);
+                        drawPieceAt(a.piece, a.from[0], a.from[1], 0.9, jitter);
+                    }
+                } else if (a.phase === 'DISSOLVE' && a.from) {
+                    const opacity = 1 - (a.t / F_DISSOLVE);
+                    drawPieceAt(a.piece, a.from[0], a.from[1], opacity, 0);
+                } else if (a.phase === 'MATERIALIZE' && a.to) {
+                    // Captured piece fading out
+                    if (a.captured) {
+                        const fadeOut = 1 - (a.t / F_MATERIALIZE);
+                        drawPieceAt(a.captured, a.to[0], a.to[1], fadeOut * 0.7, 0);
+                    }
+                    // New piece fading in with initial flicker
+                    let opacity = a.t / F_MATERIALIZE;
+                    if (a.t < 4) opacity = Math.random() > 0.5 ? opacity : 0;
+                    drawPieceAt(a.promotion || a.piece, a.to[0], a.to[1], opacity, 0);
+                } else if (a.phase === 'GLOW' && a.to) {
+                    drawSquareGlow(a.to[0], a.to[1], 1 - (a.t / F_GLOW));
+                }
+            }
+
+            // --- Animation State Machine ---
+            function tick() {
+                anim.t++;
+                switch (anim.phase) {
+                    case 'IDLE':
+                        if (anim.t >= F_IDLE) {
+                            if (curMove >= GAMES[curGame].length) {
+                                anim.phase = 'RESET'; anim.t = 0;
+                                return;
+                            }
+                            const isW = curMove % 2 === 0;
+                            const m = parseMove(GAMES[curGame][curMove], board, isW);
+                            if (!m.from) { applyMove(board, m); curMove++; return; }
+                            anim.from = m.from; anim.to = m.to; anim.piece = m.piece;
+                            anim.captured = m.captured; anim.castle = m.castle;
+                            anim.promotion = m.promotion; anim.enPassant = m.enPassant;
+                            anim.phase = 'FLICKER'; anim.t = 0;
+                        }
+                        break;
+                    case 'FLICKER':
+                        if (anim.t >= F_FLICKER) { anim.phase = 'DISSOLVE'; anim.t = 0; }
+                        break;
+                    case 'DISSOLVE':
+                        if (anim.t >= F_DISSOLVE) {
+                            applyMove(board, anim);
+                            curMove++;
+                            anim.phase = 'MATERIALIZE'; anim.t = 0;
+                        }
+                        break;
+                    case 'MATERIALIZE':
+                        if (anim.t >= F_MATERIALIZE) { anim.phase = 'GLOW'; anim.t = 0; }
+                        break;
+                    case 'GLOW':
+                        if (anim.t >= F_GLOW) {
+                            anim.phase = 'IDLE'; anim.t = 0;
+                            anim.from = null; anim.to = null;
+                        }
+                        break;
+                    case 'RESET':
+                        if (anim.t >= F_RESET) {
+                            curGame = (curGame + 1) % GAMES.length;
+                            curMove = 0;
+                            board = cloneBoard(INITIAL_BOARD);
+                            anim.phase = 'IDLE'; anim.t = 0;
+                            anim.from = null; anim.to = null;
+                        }
+                        break;
+                }
+            }
+
+            // --- Main Loop ---
+            function loop() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                if (anim.phase === 'RESET') {
+                    // Full-board flicker during game transition
+                    if (Math.random() > 0.4) {
+                        ctx.globalAlpha = 0.1 + Math.random() * 0.25;
+                        drawBoard(); drawPieces(); drawCoords();
+                        ctx.globalAlpha = 1;
+                    }
+                } else {
+                    drawBoard();
+                    drawPieces();
+                    drawAnim();
+                    drawCoords();
+                }
+
+                tick();
+                requestAnimationFrame(loop);
+            }
+
+            // Debounced resize
+            let resizeTimeout;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(resize, 150);
+            });
+
+            board = cloneBoard(INITIAL_BOARD);
+            resize();
+            loop();
+        })();
     </script>
 
 </body>
