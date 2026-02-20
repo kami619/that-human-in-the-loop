@@ -376,6 +376,36 @@
             </div>
 
 
+            <!-- 6. Stellar Explorer -->
+            <div class="card" id="widget-solar-system">
+                <div class="card-header">
+                    <span class="card-title">Stellar Explorer</span>
+                </div>
+                <div class="card-content"
+                    style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; overflow: hidden; position: relative;">
+                    <!-- Ambient background glow behind planet -->
+                    <div
+                        style="position: absolute; width: 150px; height: 150px; background: radial-gradient(circle, rgba(96,165,250,0.15) 0%, rgba(0,0,0,0) 70%); top: 50%; left: 50%; transform: translate(-50%, -60%); z-index: 0; pointer-events: none;">
+                    </div>
+
+                    <div
+                        style="font-size: 3.5rem; margin-top: 15px; filter: drop-shadow(0 0 10px rgba(96,165,250,0.4)); z-index: 1;">
+                        🪐</div>
+
+                    <div
+                        style="margin-top: 15px; color: var(--text-dim); font-size: 0.85rem; z-index: 1; padding: 0 10px;">
+                        Interactive procedural 3D Solar System & Kuiper Belt simulation.
+                    </div>
+
+                    <a href="solar-system.html"
+                        style="margin-top: auto; margin-bottom: 5px; display: inline-block; padding: 10px 20px; background: rgba(0, 255, 136, 0.05); border: 1px solid var(--accent); color: var(--accent); text-decoration: none; border-radius: 6px; font-size: 0.8rem; letter-spacing: 1px; font-weight: bold; transition: all 0.3s; z-index: 1; box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);"
+                        onmouseover="this.style.background='var(--accent)'; this.style.color='#000'; this.style.boxShadow='0 0 20px rgba(0, 255, 136, 0.4)'; this.style.transform='translateY(-2px)';"
+                        onmouseout="this.style.background='rgba(0, 255, 136, 0.05)'; this.style.color='var(--accent)'; this.style.boxShadow='0 0 10px rgba(0, 255, 136, 0.1)'; this.style.transform='translateY(0)';">
+                        ENTER SIMULATION
+                    </a>
+                </div>
+            </div>
+
         </div>
     </div>
 
