@@ -462,9 +462,9 @@
             display: document.getElementById('time' + (i + 1)),
         }));
 
-        function formatTime(tz) {
+        function formatTime(now, tz) {
             try {
-                return new Date().toLocaleTimeString('en-US', {
+                return now.toLocaleTimeString('en-US', {
                     timeZone: tz,
                     hour12: false,
                     hour: '2-digit',
@@ -477,8 +477,9 @@
         }
 
         function updateClocks() {
+            const now = new Date();
             clockEls.forEach(({ select, display }) => {
-                display.innerText = formatTime(select.value);
+                display.innerText = formatTime(now, select.value);
             });
         }
 
