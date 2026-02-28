@@ -5,20 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>In the Loop | Coming Soon</title>
+    <link rel="stylesheet" href="theme.css">
     <style>
-        :root {
-            --bg: #0a0a0a;
-            --accent: #00ff88;
-            --text: #ffffff;
-        }
-
         body,
         html {
-            margin: 0;
-            padding: 0;
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Courier New', Courier, monospace;
             height: 100vh;
             overflow: hidden;
             display: flex;
@@ -102,11 +92,17 @@
             left: 0;
             right: 0;
             opacity: 0;
-            animation: fadeQuote 60s infinite;
+            transform: translateY(8px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+        }
+
+        .quote.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .quote-text {
@@ -138,47 +134,6 @@
 
         .quote-author span {
             color: #666;
-        }
-
-        @keyframes fadeQuote {
-
-            0%,
-            18% {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-
-            2%,
-            16% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            20%,
-            100% {
-                opacity: 0;
-                transform: translateY(-8px);
-            }
-        }
-
-        .quote:nth-child(1) {
-            animation-delay: 0s;
-        }
-
-        .quote:nth-child(2) {
-            animation-delay: 12s;
-        }
-
-        .quote:nth-child(3) {
-            animation-delay: 24s;
-        }
-
-        .quote:nth-child(4) {
-            animation-delay: 36s;
-        }
-
-        .quote:nth-child(5) {
-            animation-delay: 48s;
         }
 
         .quote-dots {
@@ -250,25 +205,8 @@
             pointer-events: none;
         }
 
-        /* Subtle Scanline Effect */
-        body::after {
-            content: " ";
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            z-index: 1000;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-        }
-
-        /* Hidden form - keeping backend logic */
-        #waitlist-form {
-            display: none;
-        }
+        /* Subtle Scanline Effect — override theme.css default (9999) */
+        body::after { z-index: 1000; }
 
         /* Page Header with expanding animation */
         .page-header {
@@ -401,67 +339,28 @@
         </div>
     </div>
 
-    <!-- Hidden form - backend logic preserved -->
-    <form id="waitlist-form">
-        <input type="email" id="email" placeholder="ENTER_EMAIL_TO_JOIN" required>
-        <button type="submit" style="display:none;"></button>
-    </form>
-    <div id="response-msg" style="display: none;"></div>
-
     <script>
-        // Waitlist form backend logic (preserved)
-        document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const msg = document.getElementById('response-msg');
-
-            msg.innerText = "SYNCHRONIZING...";
-
-            const response = await fetch('/api/subscribe', {
-                method: 'POST',
-                body: JSON.stringify({ email }),
-                headers: { 'Content-Type': 'application/json' }
-            });
-
-            if (response.ok) {
-                msg.innerText = "HUMAN_VERIFIED. WELCOME TO THE LOOP.";
-                document.getElementById('email').style.display = 'none';
-            } else {
-                msg.innerText = "ERROR: LOOP_INTERRUPTED.";
-            }
-        });
-
-        // Quote rotation with dot indicator
+        // Quote carousel — JS-controlled active class, single source of truth
+        const QUOTE_INTERVAL_MS = 12000;
         const quotes = document.querySelectorAll('.quote');
         const dots = document.querySelectorAll('.quote-dot');
         let currentQuote = 0;
-        const totalQuotes = quotes.length;
-        const interval = 12000; // 12 seconds per quote
 
-        function updateDots() {
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentQuote);
-            });
+        function showQuote(index) {
+            quotes[currentQuote].classList.remove('active');
+            dots[currentQuote].classList.remove('active');
+            currentQuote = index;
+            quotes[currentQuote].classList.add('active');
+            dots[currentQuote].classList.add('active');
         }
 
-        setInterval(() => {
-            currentQuote = (currentQuote + 1) % totalQuotes;
-            updateDots();
-        }, interval);
+        let quoteTimer = setInterval(() => showQuote((currentQuote + 1) % quotes.length), QUOTE_INTERVAL_MS);
 
-        // Allow clicking on dots to change quote
         dots.forEach((dot, index) => {
             dot.addEventListener('click', () => {
-                quotes.forEach(q => {
-                    q.style.animation = 'none';
-                    q.offsetHeight; // Trigger reflow
-                });
-                currentQuote = index;
-                quotes.forEach((q, i) => {
-                    q.style.animation = '';
-                    q.style.animationDelay = `${(i - currentQuote + totalQuotes) % totalQuotes * 12}s`;
-                });
-                updateDots();
+                clearInterval(quoteTimer);
+                showQuote(index);
+                quoteTimer = setInterval(() => showQuote((currentQuote + 1) % quotes.length), QUOTE_INTERVAL_MS);
             });
         });
 
@@ -531,12 +430,14 @@
                 [WR,WN,WB,WQ,WK,WB,WN,WR]
             ];
 
+            const PHASE = Object.freeze({ IDLE: 'IDLE', FLICKER: 'FLICKER', DISSOLVE: 'DISSOLVE', MATERIALIZE: 'MATERIALIZE', GLOW: 'GLOW', RESET: 'RESET' });
+
             // Animation frame counts (~60fps)
             const F_IDLE = 72, F_FLICKER = 18, F_DISSOLVE = 12, F_MATERIALIZE = 18, F_GLOW = 12, F_RESET = 30;
 
             let board, boardSize, sqSize, bx, by;
             let curGame = 0, curMove = 0;
-            let anim = { phase: 'IDLE', t: 0, from: null, to: null, piece: null, captured: null, castle: null, promotion: null };
+            let anim = { phase: PHASE.IDLE, t: 0, from: null, to: null, piece: null, captured: null, castle: null, promotion: null };
 
             function cloneBoard(b) { return b.map(r => r.slice()); }
 
@@ -697,8 +598,8 @@
                     for (let c = 0; c < 8; c++) {
                         if (!board[r][c]) continue;
                         // Skip squares being animated
-                        if (a.from && (a.phase === 'FLICKER' || a.phase === 'DISSOLVE') && r === a.from[0] && c === a.from[1]) continue;
-                        if (a.to && a.phase === 'MATERIALIZE' && r === a.to[0] && c === a.to[1]) continue;
+                        if (a.from && (a.phase === PHASE.FLICKER || a.phase === PHASE.DISSOLVE) && r === a.from[0] && c === a.from[1]) continue;
+                        if (a.to && a.phase === PHASE.MATERIALIZE && r === a.to[0] && c === a.to[1]) continue;
                         drawPieceAt(board[r][c], r, c, 1, 0);
                     }
                 }
@@ -715,16 +616,16 @@
 
             function drawAnim() {
                 const a = anim;
-                if (a.phase === 'FLICKER' && a.from) {
+                if (a.phase === PHASE.FLICKER && a.from) {
                     const visible = Math.random() > 0.4;
                     if (visible) {
                         const jitter = Math.sin(a.t * 30) * (sqSize * 0.04);
                         drawPieceAt(a.piece, a.from[0], a.from[1], 0.9, jitter);
                     }
-                } else if (a.phase === 'DISSOLVE' && a.from) {
+                } else if (a.phase === PHASE.DISSOLVE && a.from) {
                     const opacity = 1 - (a.t / F_DISSOLVE);
                     drawPieceAt(a.piece, a.from[0], a.from[1], opacity, 0);
-                } else if (a.phase === 'MATERIALIZE' && a.to) {
+                } else if (a.phase === PHASE.MATERIALIZE && a.to) {
                     // Captured piece fading out
                     if (a.captured) {
                         const fadeOut = 1 - (a.t / F_MATERIALIZE);
@@ -734,7 +635,7 @@
                     let opacity = a.t / F_MATERIALIZE;
                     if (a.t < 4) opacity = Math.random() > 0.5 ? opacity : 0;
                     drawPieceAt(a.promotion || a.piece, a.to[0], a.to[1], opacity, 0);
-                } else if (a.phase === 'GLOW' && a.to) {
+                } else if (a.phase === PHASE.GLOW && a.to) {
                     drawSquareGlow(a.to[0], a.to[1], 1 - (a.t / F_GLOW));
                 }
             }
@@ -743,10 +644,10 @@
             function tick() {
                 anim.t++;
                 switch (anim.phase) {
-                    case 'IDLE':
+                    case PHASE.IDLE:
                         if (anim.t >= F_IDLE) {
                             if (curMove >= GAMES[curGame].length) {
-                                anim.phase = 'RESET'; anim.t = 0;
+                                anim.phase = PHASE.RESET; anim.t = 0;
                                 return;
                             }
                             const isW = curMove % 2 === 0;
@@ -755,34 +656,34 @@
                             anim.from = m.from; anim.to = m.to; anim.piece = m.piece;
                             anim.captured = m.captured; anim.castle = m.castle;
                             anim.promotion = m.promotion; anim.enPassant = m.enPassant;
-                            anim.phase = 'FLICKER'; anim.t = 0;
+                            anim.phase = PHASE.FLICKER; anim.t = 0;
                         }
                         break;
-                    case 'FLICKER':
-                        if (anim.t >= F_FLICKER) { anim.phase = 'DISSOLVE'; anim.t = 0; }
+                    case PHASE.FLICKER:
+                        if (anim.t >= F_FLICKER) { anim.phase = PHASE.DISSOLVE; anim.t = 0; }
                         break;
-                    case 'DISSOLVE':
+                    case PHASE.DISSOLVE:
                         if (anim.t >= F_DISSOLVE) {
                             applyMove(board, anim);
                             curMove++;
-                            anim.phase = 'MATERIALIZE'; anim.t = 0;
+                            anim.phase = PHASE.MATERIALIZE; anim.t = 0;
                         }
                         break;
-                    case 'MATERIALIZE':
-                        if (anim.t >= F_MATERIALIZE) { anim.phase = 'GLOW'; anim.t = 0; }
+                    case PHASE.MATERIALIZE:
+                        if (anim.t >= F_MATERIALIZE) { anim.phase = PHASE.GLOW; anim.t = 0; }
                         break;
-                    case 'GLOW':
+                    case PHASE.GLOW:
                         if (anim.t >= F_GLOW) {
-                            anim.phase = 'IDLE'; anim.t = 0;
+                            anim.phase = PHASE.IDLE; anim.t = 0;
                             anim.from = null; anim.to = null;
                         }
                         break;
-                    case 'RESET':
+                    case PHASE.RESET:
                         if (anim.t >= F_RESET) {
                             curGame = (curGame + 1) % GAMES.length;
                             curMove = 0;
                             board = cloneBoard(INITIAL_BOARD);
-                            anim.phase = 'IDLE'; anim.t = 0;
+                            anim.phase = PHASE.IDLE; anim.t = 0;
                             anim.from = null; anim.to = null;
                         }
                         break;
@@ -790,10 +691,12 @@
             }
 
             // --- Main Loop ---
+            let rafId = null;
+
             function loop() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                if (anim.phase === 'RESET') {
+                if (anim.phase === PHASE.RESET) {
                     // Full-board flicker during game transition
                     if (Math.random() > 0.4) {
                         ctx.globalAlpha = 0.1 + Math.random() * 0.25;
@@ -808,8 +711,17 @@
                 }
 
                 tick();
-                requestAnimationFrame(loop);
+                rafId = requestAnimationFrame(loop);
             }
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    cancelAnimationFrame(rafId);
+                    rafId = null;
+                } else if (!rafId) {
+                    rafId = requestAnimationFrame(loop);
+                }
+            });
 
             // Debounced resize
             let resizeTimeout;

@@ -5,12 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heuristics | In the Loop</title>
+    <link rel="stylesheet" href="theme.css">
     <style>
         :root {
-            --bg: #0a0a0a;
             --card-bg: #111;
-            --accent: #00ff88;
-            --text: #ffffff;
             --text-dim: #888;
             --border: #333;
             --card-radius: 12px;
@@ -18,27 +16,7 @@
 
         body,
         html {
-            margin: 0;
-            padding: 0;
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Courier New', Courier, monospace;
             min-height: 100vh;
-        }
-
-        /* Scanline Effect */
-        body::after {
-            content: " ";
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-            z-index: 9999;
         }
 
         .container {
@@ -153,6 +131,104 @@
                 grid-column: span 1;
             }
         }
+
+        /* Timezone select */
+        .timezone-select {
+            background: transparent;
+            color: #888;
+            border: none;
+            outline: none;
+            font-family: inherit;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .timezone-select:hover {
+            color: #fff;
+        }
+
+        /* TradingView containers */
+        .tradingview-widget-container {
+            height: 100%;
+            width: 100%;
+        }
+
+        .tradingview-widget-container__widget {
+            height: calc(100% - 32px);
+            width: 100%;
+        }
+
+        /* Stellar Explorer CTA */
+        .cta-link {
+            margin-top: auto;
+            margin-bottom: 5px;
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            font-weight: bold;
+            transition: all 0.3s;
+            z-index: 1;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
+        }
+
+        .cta-link:hover {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* BFCL leaderboard rows */
+        .bfcl-row {
+            border-bottom: 1px solid #222;
+        }
+
+        .bfcl-row td {
+            padding: 10px 4px;
+        }
+
+        .bfcl-top3 {
+            color: var(--accent);
+        }
+
+        .bfcl-provider {
+            color: #999;
+            font-size: 0.7rem;
+        }
+
+        .bfcl-acc {
+            text-align: right;
+        }
+
+        /* Clock rows */
+        .clocks-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .clock-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 8px;
+        }
+
+        .clock-row:not(:last-child) {
+            border-bottom: 1px solid #222;
+        }
+
+        .time-display {
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: var(--accent);
+        }
     </style>
 </head>
 
@@ -191,58 +267,7 @@
                 <div class="card-header">
                     <span class="card-title">Chronometers</span>
                 </div>
-                <div class="card-content" style="display: flex; flex-direction: column; gap: 10px;">
-                    <!-- Clock 1 -->
-                    <div class="clock-row"
-                        style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #222;">
-                        <select class="timezone-select" id="tz1" onchange="updateClocks()">
-                            <option value="America/New_York">New York</option>
-                            <option value="Europe/London">London</option>
-                            <option value="Asia/Tokyo">Tokyo</option>
-                            <option value="UTC">UTC</option>
-                        </select>
-                        <div class="time-display" id="time1"
-                            style="font-family: monospace; font-size: 1.1rem; color: var(--accent);">--:--:--</div>
-                    </div>
-                    <!-- Clock 2 -->
-                    <div class="clock-row"
-                        style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #222;">
-                        <select class="timezone-select" id="tz2" onchange="updateClocks()">
-                            <option value="Europe/London">London</option>
-                            <option value="America/New_York">New York</option>
-                            <option value="Asia/Tokyo">Tokyo</option>
-                            <option value="UTC">UTC</option>
-                        </select>
-                        <div class="time-display" id="time2"
-                            style="font-family: monospace; font-size: 1.1rem; color: var(--accent);">--:--:--</div>
-                    </div>
-                    <!-- Clock 3 -->
-                    <div class="clock-row" style="display: flex; justify-content: space-between; align-items: center;">
-                        <select class="timezone-select" id="tz3" onchange="updateClocks()">
-                            <option value="Asia/Tokyo">Tokyo</option>
-                            <option value="America/New_York">New York</option>
-                            <option value="Europe/London">London</option>
-                            <option value="UTC">UTC</option>
-                        </select>
-                        <div class="time-display" id="time3"
-                            style="font-family: monospace; font-size: 1.1rem; color: var(--accent);">--:--:--</div>
-                    </div>
-                </div>
-                <style>
-                    .timezone-select {
-                        background: transparent;
-                        color: #888;
-                        border: none;
-                        outline: none;
-                        font-family: inherit;
-                        font-size: 0.8rem;
-                        cursor: pointer;
-                    }
-
-                    .timezone-select:hover {
-                        color: #fff;
-                    }
-                </style>
+                <div class="card-content clocks-content" id="clocks-content"></div>
             </div>
 
             <!-- 3. BFCL Tool Calling Leaderboard Widget -->
@@ -286,8 +311,8 @@
                 </div>
                 <div class="card-content" style="padding:0; overflow:hidden; position:relative;">
                     <!-- TradingView Widget BEGIN -->
-                    <div class="tradingview-widget-container" style="height:100%; width:100%">
-                        <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px); width:100%">
+                    <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container__widget">
                         </div>
                         <script type="text/javascript"
                             src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
@@ -356,8 +381,8 @@
                 </div>
                 <div class="card-content" style="padding:0; overflow:hidden; position:relative;">
                     <!-- TradingView Widget BEGIN -->
-                    <div class="tradingview-widget-container" style="height:100%; width:100%">
-                        <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px); width:100%">
+                    <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container__widget">
                         </div>
                         <script type="text/javascript"
                             src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
@@ -397,12 +422,7 @@
                         Interactive procedural 3D Solar System & Kuiper Belt simulation.
                     </div>
 
-                    <a href="solar-system.html"
-                        style="margin-top: auto; margin-bottom: 5px; display: inline-block; padding: 10px 20px; background: rgba(0, 255, 136, 0.05); border: 1px solid var(--accent); color: var(--accent); text-decoration: none; border-radius: 6px; font-size: 0.8rem; letter-spacing: 1px; font-weight: bold; transition: all 0.3s; z-index: 1; box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);"
-                        onmouseover="this.style.background='var(--accent)'; this.style.color='#000'; this.style.boxShadow='0 0 20px rgba(0, 255, 136, 0.4)'; this.style.transform='translateY(-2px)';"
-                        onmouseout="this.style.background='rgba(0, 255, 136, 0.05)'; this.style.color='var(--accent)'; this.style.boxShadow='0 0 10px rgba(0, 255, 136, 0.1)'; this.style.transform='translateY(0)';">
-                        ENTER SIMULATION
-                    </a>
+                    <a href="solar-system.html" class="cta-link">ENTER SIMULATION</a>
                 </div>
             </div>
 
@@ -410,32 +430,62 @@
     </div>
 
     <script>
-        // Placeholder for widget scripts
         // --- Clocks Widget ---
-        function updateClocks() {
-            const now = new Date();
-            const formatTime = (tz) => {
-                try {
-                    return now.toLocaleTimeString('en-US', {
-                        timeZone: tz,
-                        hour12: false,
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
-                    });
-                } catch (e) {
-                    return "--:--:--";
-                }
-            };
+        const CLOCKS = [
+            { id: 'tz1', tz: 'America/New_York' },
+            { id: 'tz2', tz: 'Europe/London'    },
+            { id: 'tz3', tz: 'Asia/Tokyo'       },
+        ];
 
-            document.getElementById('time1').innerText = formatTime(document.getElementById('tz1').value);
-            document.getElementById('time2').innerText = formatTime(document.getElementById('tz2').value);
-            document.getElementById('time3').innerText = formatTime(document.getElementById('tz3').value);
+        const TZ_OPTIONS = [
+            { value: 'America/New_York', label: 'New York' },
+            { value: 'Europe/London',    label: 'London'   },
+            { value: 'Asia/Tokyo',       label: 'Tokyo'    },
+            { value: 'UTC',              label: 'UTC'      },
+        ];
+
+        // Render clock rows from config
+        document.getElementById('clocks-content').innerHTML = CLOCKS.map((clock, i) => `
+            <div class="clock-row">
+                <select class="timezone-select" id="${clock.id}">
+                    ${TZ_OPTIONS.map(opt =>
+                        `<option value="${opt.value}"${opt.value === clock.tz ? ' selected' : ''}>${opt.label}</option>`
+                    ).join('')}
+                </select>
+                <div class="time-display" id="time${i + 1}">--:--:--</div>
+            </div>
+        `).join('');
+
+        // Cache element refs
+        const clockEls = CLOCKS.map((clock, i) => ({
+            select: document.getElementById(clock.id),
+            display: document.getElementById('time' + (i + 1)),
+        }));
+
+        function formatTime(tz) {
+            try {
+                return new Date().toLocaleTimeString('en-US', {
+                    timeZone: tz,
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            } catch (e) {
+                return '--:--:--';
+            }
         }
-        setInterval(updateClocks, 1000);
-        updateClocks(); // Initial call
 
-        // --- Weather Widget ---
+        function updateClocks() {
+            clockEls.forEach(({ select, display }) => {
+                display.innerText = formatTime(select.value);
+            });
+        }
+
+        clockEls.forEach(({ select }) => select.addEventListener('change', updateClocks));
+        setInterval(updateClocks, 1000);
+        updateClocks();
+
         // --- Weather Widget ---
         function analyzeWeather(temp, wc) {
             let condition = "Unknown";
@@ -451,35 +501,26 @@
             else if (wc >= 80 && wc <= 82) condition = "Showers";
             else if (wc >= 95) condition = "Thunderstorm";
 
-            // 2. Generate Smart Advice
-            // Extreme Cold
-            if (temp <= -10) advice = "Hazardous cold. Thermal insulation mandatory.";
-            // Freezing
-            else if (temp <= 0) {
-                if (wc >= 71) advice = "Icy conditions. Tread carefully.";
-                else advice = "Freezing point. Layer up.";
-            }
-            // Cold (0-10)
-            else if (temp <= 10) {
-                if (wc >= 61) advice = "Cold & wet. Waterproof insulation required.";
-                else advice = "Chilly atmosphere. Jacket recommended.";
-            }
-            // Moderate (10-20)
-            else if (temp <= 20) {
+            // 2. Generate Advice — thunderstorm is highest priority, checked first
+            if (wc >= 95) {
+                advice = "Electrical storm. Seek shelter immediately.";
+            } else if (temp <= -10) {
+                advice = "Hazardous cold. Thermal insulation mandatory.";
+            } else if (temp <= 0) {
+                advice = wc >= 71 ? "Icy conditions. Tread carefully." : "Freezing point. Layer up.";
+            } else if (temp <= 10) {
+                advice = wc >= 61 ? "Cold & wet. Waterproof insulation required." : "Chilly atmosphere. Jacket recommended.";
+            } else if (temp <= 20) {
                 if (wc === 0) advice = "Optimal operating conditions.";
                 else if (wc >= 51) advice = "Mild but damp. Light protection advised.";
                 else advice = "Standard conditions.";
+            } else if (temp <= 30) {
+                advice = wc === 0 ? "Warm & clear. Ideal." : "Warm & humid. Monitor comfort.";
+            } else {
+                advice = "High heat. Maintain hydration protocols.";
             }
-            // Warm (20-30)
-            else if (temp <= 30) {
-                if (wc === 0) advice = "Warm & clear. Ideal.";
-                else advice = "Warm & humid. Monitor comfort.";
-            }
-            // Hot (30+)
-            else advice = "High heat. Maintain hydration protocols.";
 
-            // Critical Overrides
-            if (wc >= 95) advice = "Electrical storm. Seek shelter immediately.";
+            // Fog append (mutually exclusive with thunderstorm codes)
             if (wc === 45 || wc === 48) advice += " (Low visibility)";
 
             return { condition, advice };
@@ -565,13 +606,13 @@
                 // Render top 6 models
                 const models = data.leaderboard.slice(0, 6);
                 tbody.innerHTML = models.map((m, i) => `
-                    <tr style="border-bottom: 1px solid #222;">
-                        <td style="padding: 10px 4px; ${i < 3 ? 'color: var(--accent);' : ''}">${m.rank}</td>
-                        <td style="padding: 10px 4px;">
-                            <span style="color: #999; font-size: 0.7rem;">${m.provider}</span><br>
+                    <tr class="bfcl-row">
+                        <td class="${i < 3 ? 'bfcl-top3' : ''}">${m.rank}</td>
+                        <td>
+                            <span class="bfcl-provider">${m.provider}</span><br>
                             ${m.model}
                         </td>
-                        <td style="padding: 10px 4px; text-align: right; ${i < 3 ? 'color: var(--accent);' : ''}">${m.accuracy.toFixed(1)}</td>
+                        <td class="bfcl-acc ${i < 3 ? 'bfcl-top3' : ''}">${m.accuracy.toFixed(1)}</td>
                     </tr>
                 `).join('');
 

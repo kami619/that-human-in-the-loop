@@ -1,9 +1,9 @@
 import requests
 import json
 import csv
+import heapq
 import io
 import datetime
-import os
 import re
 
 # Constants
@@ -71,20 +71,13 @@ def process_data(csv_text):
             print(f"Skipping row due to error: {e}, Row: {row}")
             continue
 
-    # Sort by rank just in case, though CSV is usually sorted
-    leaderboard.sort(key=lambda x: x['rank'])
-    
-    return leaderboard[:TOP_N]
+    return heapq.nsmallest(TOP_N, leaderboard, key=lambda x: x['rank'])
 
 def update_json_file(leaderboard_data):
-    # Read existing file to preserve meta or creating new if not exists
-    if os.path.exists(JSON_FILE_PATH):
+    try:
         with open(JSON_FILE_PATH, 'r') as f:
-            try:
-                data = json.load(f)
-            except json.JSONDecodeError:
-                data = {"meta": {}}
-    else:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
         data = {"meta": {}}
 
     # Update Meta
