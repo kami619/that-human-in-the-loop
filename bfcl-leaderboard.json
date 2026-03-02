@@ -2,7 +2,7 @@
     "meta": {
         "source": "Berkeley Function-Calling Leaderboard (BFCL) V4",
         "url": "https://gorilla.cs.berkeley.edu/leaderboard.html",
-        "last_updated": "2026-01-06",
+        "last_updated": "2026-03-02",
         "description": "Evaluates LLM ability to call functions/tools accurately"
     },
     "leaderboard": [
