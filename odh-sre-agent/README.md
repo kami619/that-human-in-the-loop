@@ -175,6 +175,9 @@ When adopting [odh-gitops](https://github.com/opendatahub-io/odh-gitops) with Ar
 
 Phase 1 agents remain unchanged — the extension is purely additive.
 
+### References
+- https://github.com/rcarrat-AI/nvidia-odh-gitops?tab=readme-ov-file (built in 2023 💥)
+
 ## License
 
 MIT
