@@ -21,4 +21,5 @@ Monorepo with standalone projects. Sub-projects with their own `AGENTS.md` are l
 | Directory | Description |
 |-----------|-------------|
 | `food-vlog-agent/` | Multi-agent YouTube food vlog → itinerary pipeline (Claude Agent SDK) |
-| `chess-pgn/` | PGN file of chess games |
+| `odh-sre-agent/` | Multi-agent SRE system for ROSA OpenShift + Open Data Hub (Claude Agent SDK) |
+| `chess-pgn/` | PGN files of chess games |
