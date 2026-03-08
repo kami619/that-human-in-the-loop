@@ -300,6 +300,15 @@ wheels = [
 ]
 
 [[package]]
+name = "kubernetes-mcp-server"
+version = "0.0.58"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ae/52/e39476e492a609a2a0a5a736f634a6e4fa192e03cb3b9bcbd2f0339d5e10/kubernetes_mcp_server-0.0.58.tar.gz", hash = "sha256:9398ddf47a9bfcae8fa6e29a75ce7a59a18720106101d9dd5d4acd5a834735ac", size = 36076, upload-time = "2026-02-27T14:35:47.69Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e1/a5/9eb766d1cd17ee69b01ad3517ba9597c1fc3f0c12dcf90c507446975e157/kubernetes_mcp_server-0.0.58-py3-none-any.whl", hash = "sha256:5580880e746bf9f80eadb1d4205f87d6a5c7c582dd7c232c00a6d4ae6216b917", size = 14864, upload-time = "2026-02-27T14:35:46.099Z" },
+]
+
+[[package]]
 name = "markdown-it-py"
 version = "4.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -351,6 +360,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "claude-agent-sdk" },
+    { name = "kubernetes-mcp-server" },
     { name = "pydantic" },
     { name = "python-dotenv" },
     { name = "rich" },
@@ -366,6 +376,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "claude-agent-sdk", specifier = ">=0.1.40" },
+    { name = "kubernetes-mcp-server", specifier = ">=0.0.50" },
     { name = "pydantic", specifier = ">=2.0.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0.0" },
     { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.23.0" },

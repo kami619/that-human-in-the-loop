@@ -90,7 +90,7 @@ uv run python main.py \
 
 ## Testing
 
-Three levels of testing, each requiring progressively more infrastructure:
+Four levels of testing, each requiring progressively more infrastructure:
 
 ### Level 1: Unit tests (no cluster, no API key)
 
@@ -120,7 +120,36 @@ make dry-run
 
 **Requires:** `ANTHROPIC_API_KEY` and `kubernetes-mcp-server` on PATH (`pip install kubernetes-mcp-server`).
 
-### Level 3: Live mode (needs cluster access)
+### Level 3: kind cluster (needs Podman/Docker, no cloud cluster)
+
+Runs the agent against a local [kind](https://kind.sigs.k8s.io/) cluster with a real ODH installation. The setup script clones the upstream [odh-gitops](https://github.com/opendatahub-io/odh-gitops/tree/main/charts/odh-rhoai) Helm chart, installs OLM + the ODH operator, and injects deliberate faults for the agent to diagnose.
+
+```bash
+# Create cluster, install OLM + ODH, inject faults
+make kind-up
+
+# Run the agent
+make kind-test
+
+# Tear down
+make kind-down
+```
+
+**What gets deployed:**
+- Real ODH CRDs (23) extracted from the [operator bundle image](https://quay.io/opendatahub/opendatahub-operator-bundle) on quay.io
+- Real `DataScienceCluster` and `DSCInitialization` CRs rendered from the upstream [odh-gitops chart](https://github.com/opendatahub-io/odh-gitops/tree/main/charts/odh-rhoai) via `helm template`
+- Simulated workloads (Deployments, Services) matching ODH component names
+- Faults: OOMKilled dashboard pods, Pending pipelines pod, unbound PVC
+
+**What it exercises:** End-to-end SRE workflow against real K8s API. Agents discover actual OOMKill events, Pending pods, and resource issues via `kubernetes-mcp-server` tool calls. CRDs and CRs are real — the agent can inspect `DataScienceCluster` and `DSCInitialization` resources.
+
+**Limitations:** The ODH operator itself requires OpenShift (`config.openshift.io` APIs) and cannot run on kind. Workloads are simulated Deployments, not operator-reconciled. OpenShift-specific resources (Routes, ClusterOperators, Projects) won't exist.
+
+**Cost:** ~$0.10–0.30 per run (Claude API); K8s API calls are free.
+
+**Requires:** `ANTHROPIC_API_KEY`, `kubernetes-mcp-server`, `kind`, `kubectl`, `helm`, Podman (or Docker).
+
+### Level 4: Live ROSA/OpenShift cluster
 
 Runs against a real ROSA/OpenShift cluster. Agents call actual `kubernetes-mcp-server` tools that query the K8s API.
 
@@ -134,7 +163,7 @@ uv run python main.py \
   --namespace redhat-ods-applications
 ```
 
-**What it exercises:** End-to-end SRE workflow against real cluster state — the agents discover real issues, not mock data.
+**What it exercises:** Full end-to-end SRE workflow against real cluster state with OpenShift-specific resources (Routes, ClusterOperators, Projects).
 
 **Cost:** ~$0.10–0.30 per run (same Claude costs; K8s API calls are free).
 
@@ -159,6 +188,13 @@ odh-sre-agent/
 │   ├── test_definitions.py
 │   ├── test_orchestrator.py
 │   └── test_config.py
+├── test-fixtures/              # Config for kind cluster ODH install
+│   ├── values-kind.yaml        # Helm values override (ODH type, minimal components)
+│   └── faults.yaml             # Post-install fault injection (Pending pod, bad PVC)
+├── scripts/
+│   ├── kind-setup.sh           # Create kind cluster, install OLM + ODH, inject faults
+│   └── kind-teardown.sh        # Delete kind cluster + clean cloned chart
+├── kind-config.yaml            # Kind cluster configuration
 ├── pyproject.toml
 ├── Makefile
 └── AGENTS.md

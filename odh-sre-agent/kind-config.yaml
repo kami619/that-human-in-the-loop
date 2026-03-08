@@ -1,0 +1,15 @@
+# Kind cluster config for ODH SRE agent local testing.
+# 1 control-plane + 1 worker. Worker has constrained memory to trigger
+# scheduling failures and memory pressure — matching the mock scenario.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+    kubeadmConfigPatches:
+      - |
+        kind: KubeletConfiguration
+        evictionHard:
+          memory.available: "100Mi"
+        systemReserved:
+          memory: "256Mi"

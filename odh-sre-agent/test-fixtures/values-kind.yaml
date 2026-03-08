@@ -1,0 +1,97 @@
+# Helm values override for installing ODH on a kind cluster.
+# Used with the chart at: https://github.com/opendatahub-io/odh-gitops/tree/main/charts/odh-rhoai
+#
+# Key differences from defaults:
+#   - skipCrdCheck: true (CRDs don't exist until operator installs them)
+#   - OLM catalog source: operatorhubio-catalog in olm namespace (vanilla k8s OLM)
+#   - operator.type: odh (not rhoai — rhoai needs OpenShift-specific APIs)
+#   - Minimal components: only dashboard + workbenches enabled
+#   - All dependencies disabled (no cert-manager, GPU, kueue, etc.)
+#   - Monitoring disabled
+
+skipCrdCheck: true
+
+olm:
+  source: operatorhubio-catalog
+  sourceNamespace: olm
+
+operator:
+  type: odh
+  odh:
+    olm:
+      source: operatorhubio-catalog
+
+# Disable monitoring (requires Prometheus/cluster-observability on OpenShift)
+services:
+  monitoring:
+    dependencies:
+      clusterObservability: false
+      opentelemetry: false
+      tempo: false
+    dsci:
+      managementState: Removed
+
+# Minimal components — just enough for the agent to investigate
+components:
+  dashboard:
+    dsc:
+      managementState: Managed
+  workbenches:
+    dsc:
+      managementState: Managed
+  # Disable everything else
+  aipipelines:
+    dsc:
+      managementState: Removed
+  feastoperator:
+    dsc:
+      managementState: Removed
+  kserve:
+    dependencies:
+      certManager: false
+      leaderWorkerSet: false
+      jobSet: false
+      rhcl: false
+      customMetricsAutoscaler: false
+    dsc:
+      managementState: Removed
+  kueue:
+    dependencies:
+      certManager: false
+      kueue: false
+    dsc:
+      managementState: Removed
+  modelregistry:
+    dsc:
+      managementState: Removed
+  ray:
+    dependencies:
+      certManager: false
+    dsc:
+      managementState: Removed
+  trainer:
+    dependencies:
+      certManager: false
+      jobSet: false
+    dsc:
+      managementState: Removed
+  trainingoperator:
+    dsc:
+      managementState: Removed
+  trustyai:
+    dsc:
+      managementState: Removed
+  mlflowoperator:
+    dsc:
+      managementState: Removed
+  llamastackoperator:
+    dependencies:
+      nfd: false
+      nvidiaGPUOperator: false
+    dsc:
+      managementState: Removed
+
+# Dependencies: leave as "auto" (default). Since all components that
+# require these are set to Removed, none will be installed.
+# Note: the chart's NOTES.txt has a type mismatch bug when enabled is
+# boolean false, so we rely on "auto" + disabled components instead.

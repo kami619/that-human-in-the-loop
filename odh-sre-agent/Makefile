@@ -1,4 +1,4 @@
-.PHONY: install test lint format check dry-run clean
+.PHONY: install test lint format check dry-run clean kind-up kind-down kind-test
 
 # Unset CLAUDECODE to avoid nested-session error when running from Claude Code terminal
 export CLAUDECODE=
@@ -22,6 +22,17 @@ check:  ## Run all checks (lint + test)
 
 dry-run:  ## Run with mock data (no cluster or API keys needed)
 	uv run python main.py --query "Why are pods crashlooping in redhat-ods-applications?" --dry-run
+
+kind-up:  ## Create kind cluster, install OLM + ODH from upstream chart, inject faults
+	./scripts/kind-setup.sh
+
+kind-down:  ## Delete the kind cluster and clean up cloned chart
+	./scripts/kind-teardown.sh
+
+kind-test:  ## Run the agent live against the kind cluster
+	uv run python main.py \
+		--query "Check cluster health and investigate issues in opendatahub namespace" \
+		--namespace opendatahub
 
 clean:  ## Remove build artifacts and caches
 	rm -rf .pytest_cache __pycache__ .ruff_cache

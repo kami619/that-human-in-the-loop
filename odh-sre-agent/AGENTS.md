@@ -2,6 +2,7 @@
 
 ## Commands
 - `make install` / `make test` / `make check` / `make dry-run`
+- `make kind-up` / `make kind-test` / `make kind-down` — kind cluster with ODH fixtures
 - Always use `uv run python` not bare `python`
 - Run live: `uv run python main.py --query "..." --namespace "..."`
 

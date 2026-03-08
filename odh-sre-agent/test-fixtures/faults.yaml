@@ -1,0 +1,54 @@
+# Fault injection manifests — applied AFTER the ODH operator has reconciled.
+# These create deliberate issues for the SRE agent to discover and diagnose.
+#
+# Namespace: opendatahub (ODH applicationsNamespace for operator.type=odh)
+
+---
+# Fault 1: Deployment that stays Pending (requests more memory than any node has).
+# Simulates a data-science-pipelines-api pod that can't be scheduled.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-science-pipelines-api
+  namespace: opendatahub
+  labels:
+    app: data-science-pipelines-api
+    app.kubernetes.io/part-of: opendatahub
+    fault-injection: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-science-pipelines-api
+  template:
+    metadata:
+      labels:
+        app: data-science-pipelines-api
+    spec:
+      containers:
+        - name: api-server
+          image: registry.k8s.io/pause:3.9
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Gi
+            limits:
+              memory: 32Gi
+---
+# Fault 2: PVC with non-existent StorageClass → stays Pending.
+# Simulates a user notebook volume that can't bind.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jupyter-nb-user1-pvc
+  namespace: opendatahub
+  labels:
+    app.kubernetes.io/part-of: opendatahub
+    fault-injection: "true"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp3-csi
+  resources:
+    requests:
+      storage: 10Gi
