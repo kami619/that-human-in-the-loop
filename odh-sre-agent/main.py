@@ -113,6 +113,19 @@ async def stream_pipeline(query_text: str, namespace: str, dry_run: bool) -> Non
         _, rest = eg.split(lambda e: isinstance(e, CLIConnectionError))
         if rest:
             raise rest from eg
+    except Exception as exc:
+        error_msg = str(exc)
+        if "exit code" in error_msg:
+            console.print()
+            console.print(
+                Panel(
+                    f"[red]{error_msg}[/red]",
+                    title="Error",
+                    border_style="red",
+                )
+            )
+            sys.exit(1)
+        raise
 
 
 async def main():
