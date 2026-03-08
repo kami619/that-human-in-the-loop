@@ -10,7 +10,6 @@ dynamically decides which agents to invoke based on the user's query.
 
 from __future__ import annotations
 
-import asyncio
 import os
 import shutil
 
@@ -129,27 +128,6 @@ def build_options(dry_run: bool = False) -> ClaudeAgentOptions:
     )
 
 
-async def _held_message(text: str, done: asyncio.Event):
-    """Yield one user message, then block until *done* is set.
-
-    The SDK's ``stream_input`` closes stdin once the async iterable is
-    exhausted **and** the first ``result`` message arrives. With sub-agents
-    the first result belongs to a sub-agent, not the final pipeline — so
-    stdin gets closed too early and the orchestrator loses its MCP channel.
-
-    By keeping this generator alive until the outer ``run_pipeline`` loop
-    finishes, ``stream_input`` never reaches the ``end_input()`` call while
-    the orchestrator still needs it.
-    """
-    yield {
-        "type": "user",
-        "session_id": "",
-        "message": {"role": "user", "content": text},
-        "parent_tool_use_id": None,
-    }
-    await done.wait()
-
-
 async def run_pipeline(user_query: str, namespace: str = "", dry_run: bool = False):
     """Run the SRE investigation pipeline.
 
@@ -161,9 +139,5 @@ async def run_pipeline(user_query: str, namespace: str = "", dry_run: bool = Fal
     if namespace:
         prompt += f"\n\nFocus on namespace: {namespace}"
 
-    done = asyncio.Event()
-    try:
-        async for message in query(prompt=_held_message(prompt, done), options=options):
-            yield message
-    finally:
-        done.set()
+    async for message in query(prompt=prompt, options=options):
+        yield message
