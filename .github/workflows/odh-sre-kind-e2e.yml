@@ -1,7 +1,7 @@
 # End-to-end test: spin up a kind cluster with ODH CRDs, CRs, and
 # simulated workloads, inject faults, and run the SRE agent.
 #
-# Requires ANTHROPIC_API_KEY as a repository secret.
+# Requires ANTHROPIC_API_KEY in the "prod" environment secret.
 # Cost: ~$0.10-0.30 per run (Sonnet orchestrator + Haiku sub-agents).
 name: ODH SRE Agent — kind e2e
 
@@ -16,6 +16,7 @@ on:
 jobs:
   e2e:
     runs-on: ubuntu-latest
+    environment: prod
     timeout-minutes: 20
     defaults:
       run:
