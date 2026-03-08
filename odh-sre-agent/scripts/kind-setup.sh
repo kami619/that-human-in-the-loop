@@ -75,7 +75,7 @@ else
 
   echo "Extracting CRDs from bundle..."
   mkdir -p "$BUNDLE_DIR"
-  CID=$($CONTAINER_RT create --platform linux/amd64 "$BUNDLE_IMG" 2>&1 | tail -1)
+  CID=$($CONTAINER_RT create "$BUNDLE_IMG" true)
   $CONTAINER_RT cp "$CID:/manifests" "$BUNDLE_DIR/manifests"
   $CONTAINER_RT rm "$CID" >/dev/null
 fi
