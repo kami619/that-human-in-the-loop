@@ -119,11 +119,45 @@ GOOGLE_MAPS_API_KEY=AIza...your-key-here
 
 ## Setup
 
+### Secrets (Bitwarden CLI)
+
+API keys are stored in Bitwarden — not in `.env` files. One-time setup:
+
+1. **Install Bitwarden CLI**
+   ```bash
+   brew install bitwarden-cli   # macOS
+   sudo dnf install bw          # Fedora
+   ```
+
+2. **Store keys** (if not already in your vault)
+   ```bash
+   export BW_SESSION=$(bw unlock --raw)
+
+   echo '{"type":1,"name":"anthropic-api-key","login":{"password":"sk-ant-..."}}' | bw encode | bw create item
+   echo '{"type":1,"name":"google-maps-api-key","login":{"password":"AIza..."}}' | bw encode | bw create item
+   echo '{"type":1,"name":"google-vision-credentials-path","login":{"password":"/path/to/service-account.json"}}' | bw encode | bw create item
+
+   bw sync
+   ```
+
+3. **Load secrets** — pick one method:
+
+   **Option A: wrapper script**
+   ```bash
+   ./load-secrets.sh uv run python main.py --dry-run
+   ```
+
+   **Option B: direnv** (auto-loads when you `cd` into the project)
+   ```bash
+   brew install direnv          # one-time
+   echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc   # or ~/.bashrc
+   direnv allow .               # trust this .envrc
+   ```
+
+### Local tools
+
 ```bash
 cd food-vlog-agent
-cp .env.example .env
-# Fill in API keys in .env
-
 brew install ffmpeg    # if not installed
 make install           # installs Python deps
 make test              # verify everything works

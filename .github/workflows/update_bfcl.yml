@@ -47,17 +47,21 @@ jobs:
         run: |
           git diff --exit-code bfcl-leaderboard.json || echo "changes=true" >> $GITHUB_OUTPUT
 
-      - name: Commit and Push changes
+      - name: Commit and push changes
         if: steps.git-check.outputs.changes == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          
-          # Create and switch to bfcl branch
-          git checkout -B bfcl
-          
+
+          BRANCH="bfcl-update-$(date +%Y%m%d)"
+          git checkout -b "$BRANCH"
+
           git add bfcl-leaderboard.json
-          git commit -m "chore: update BFCL leaderboard data [skip ci]"
-          
-          # Push to the bfcl branch
-          git push -f origin bfcl
+          git commit -m "chore: update BFCL leaderboard data"
+
+          git push -u origin "$BRANCH"
+          gh pr create --title "chore: update BFCL leaderboard data" \
+            --body "Automated daily BFCL leaderboard update." \
+            --base main || echo "PR already exists"

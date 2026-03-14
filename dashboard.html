@@ -606,16 +606,30 @@
 
                 // Render top 6 models
                 const models = data.leaderboard.slice(0, 6);
-                tbody.innerHTML = models.map((m, i) => `
-                    <tr class="bfcl-row">
-                        <td class="${i < 3 ? 'bfcl-top3' : ''}">${m.rank}</td>
-                        <td>
-                            <span class="bfcl-provider">${m.provider}</span><br>
-                            ${m.model}
-                        </td>
-                        <td class="bfcl-acc ${i < 3 ? 'bfcl-top3' : ''}">${m.accuracy.toFixed(1)}</td>
-                    </tr>
-                `).join('');
+                tbody.innerHTML = '';
+                models.forEach((m, i) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'bfcl-row';
+
+                    const rankTd = document.createElement('td');
+                    if (i < 3) rankTd.className = 'bfcl-top3';
+                    rankTd.textContent = m.rank;
+
+                    const nameTd = document.createElement('td');
+                    const providerSpan = document.createElement('span');
+                    providerSpan.className = 'bfcl-provider';
+                    providerSpan.textContent = m.provider;
+                    nameTd.appendChild(providerSpan);
+                    nameTd.appendChild(document.createElement('br'));
+                    nameTd.appendChild(document.createTextNode(m.model));
+
+                    const accTd = document.createElement('td');
+                    accTd.className = 'bfcl-acc' + (i < 3 ? ' bfcl-top3' : '');
+                    accTd.textContent = m.accuracy.toFixed(1);
+
+                    tr.append(rankTd, nameTd, accTd);
+                    tbody.appendChild(tr);
+                });
 
             } catch (error) {
                 console.error('BFCL Error:', error);

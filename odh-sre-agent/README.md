@@ -53,11 +53,41 @@ Sub-agents cannot spawn sub-agents. The orchestrator decides which agents to inv
 
 ## Setup
 
+### Secrets (Bitwarden CLI)
+
+API keys are stored in Bitwarden — not in `.env` files. One-time setup:
+
+1. **Install Bitwarden CLI**
+   ```bash
+   brew install bitwarden-cli   # macOS
+   sudo dnf install bw          # Fedora
+   ```
+
+2. **Store key** (if not already in your vault)
+   ```bash
+   export BW_SESSION=$(bw unlock --raw)
+   echo '{"type":1,"name":"anthropic-api-key","login":{"password":"sk-ant-..."}}' | bw encode | bw create item
+   bw sync
+   ```
+
+3. **Load secrets** — pick one method:
+
+   **Option A: wrapper script**
+   ```bash
+   ./load-secrets.sh uv run python main.py --dry-run
+   ```
+
+   **Option B: direnv** (auto-loads when you `cd` into the project)
+   ```bash
+   brew install direnv          # one-time
+   echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc   # or ~/.bashrc
+   direnv allow .               # trust this .envrc
+   ```
+
+### Install dependencies
+
 ```bash
 cd odh-sre-agent
-cp .env.example .env
-# Fill in ANTHROPIC_API_KEY in .env
-
 make install
 make test
 ```
@@ -108,9 +138,7 @@ make check     # lint + tests
 Runs the full multi-agent pipeline with real Claude API calls. The `kubernetes-mcp-server` starts with `--cluster-provider disabled` and the orchestrator gets mock cluster data (OOMKilled pod, Pending PVC, degraded operator) injected into its system prompt. Agents reason over the mock data and produce a real investigation report.
 
 ```bash
-cp .env.example .env
-# Set ANTHROPIC_API_KEY in .env
-
+# Ensure secrets are loaded (via load-secrets.sh or direnv)
 make dry-run
 ```
 
