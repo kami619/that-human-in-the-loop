@@ -7,7 +7,7 @@ A monorepo containing a cyberpunk-themed personal dashboard and multi-agent AI p
 A static two-page dashboard with live data widgets, served with no build step.
 
 - **Landing page** (`index.html`) -- Animated header, chess board animation, rotating engineering quotes
-- **Dashboard** (`dashboard.html`) -- Weather, multi-timezone clocks, BFCL V4 leaderboard, TradingView markets, financial news, stellar explorer
+- **Dashboard** (`dashboard.html`) -- Weather, multi-timezone clocks, DeepSWE coding-agent leaderboard, Artificial Analysis Intelligence Index, TradingView markets, financial news, stellar explorer
 - **Solar system** (`solar-system.html`) -- 3D solar system visualization
 
 ### Run locally
@@ -25,9 +25,10 @@ npx serve .
 | ipapi.co / ipwho.is | Geolocation (weather) | None |
 | Open-Meteo | Weather | None |
 | TradingView | Markets, News | None (embedded widgets) |
-| Berkeley BFCL CSV | Leaderboard | None |
+| DeepSWE snapshot | Coding-agent leaderboard | None |
+| Artificial Analysis snapshot | Intelligence Index | None |
 
-BFCL leaderboard data is refreshed daily via GitHub Actions (`.github/workflows/update_bfcl.yml`) and stored in `bfcl-leaderboard.json`.
+The dashboard uses checked-in snapshots in `deepswe-leaderboard.json` and `artificial-analysis-leaderboard.json`. They are refreshed daily by GitHub Actions (`.github/workflows/update_model_leaderboards.yml`). Each widget displays its source and snapshot date. Artificial Analysis API access is kept server-side in the workflow.
 
 ## Agent Projects
 
@@ -45,16 +46,20 @@ Both projects follow the same patterns: Sonnet orchestrator dispatching Haiku su
 ```
 that-hitl/
 ├── index.html                  # Landing page
-├── dashboard.html              # Dashboard with 6 widget cards
+├── dashboard.html              # Dashboard with model leaderboard widgets
 ├── solar-system.html           # 3D solar system
 ├── theme.css                   # Shared CSS variables and scanline effect
-├── bfcl-leaderboard.json       # BFCL V4 data (auto-updated)
+├── deepswe-leaderboard.json    # DeepSWE v1.1 snapshot
+├── artificial-analysis-leaderboard.json # Artificial Analysis snapshot
 ├── functions/
 │   ├── api/subscribe.js        # Cloudflare Worker (waitlist endpoint)
-│   ├── update_bfcl_leaderboard.py  # Python ETL: Berkeley CSV -> JSON
-│   └── test_update_bfcl.py     # 16 unit tests for ETL
+│   ├── update_bfcl_leaderboard.py  # Legacy BFCL ETL
+│   ├── test_update_bfcl.py     # Legacy BFCL ETL tests
+│   ├── update_model_leaderboards.py # DeepSWE + Artificial Analysis ETL
+│   ├── test_update_model_leaderboards.py # ETL tests
+│   └── test_leaderboard_snapshots.py # Snapshot schema tests
 ├── .github/workflows/
-│   └── update_bfcl.yml         # Daily cron to refresh leaderboard data
+│   └── update_model_leaderboards.yml # Daily leaderboard refresh
 ├── food-vlog-agent/            # YouTube food vlog agent (see its README)
 ├── odh-sre-agent/              # OpenShift SRE agent (see its README)
 ├── chess-pgn/                  # PGN files of chess games

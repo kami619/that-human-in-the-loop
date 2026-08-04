@@ -126,9 +126,45 @@
             grid-row: span 2;
         }
 
+        /* Desktop dashboard composition: local widgets stacked at left,
+           leaderboards side by side on the right. */
+        #widget-weather {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        #widget-clocks {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        #widget-intelligence {
+            grid-column: 2;
+            grid-row: 1 / span 2;
+        }
+
+        #widget-deepswe {
+            grid-column: 3;
+            grid-row: 1 / span 2;
+        }
+
+        #widget-indices {
+            grid-column: 1 / span 3;
+            grid-row: 3;
+        }
+
         @media (max-width: 1024px) {
             .col-span-2 {
                 grid-column: span 1;
+            }
+
+            #widget-weather,
+            #widget-clocks,
+            #widget-intelligence,
+            #widget-deepswe,
+            #widget-indices {
+                grid-column: auto;
+                grid-row: auto;
             }
         }
 
@@ -184,26 +220,39 @@
             transform: translateY(-2px);
         }
 
-        /* BFCL leaderboard rows */
-        .bfcl-row {
+        /* Model leaderboard rows */
+        .model-row {
             border-bottom: 1px solid #222;
         }
 
-        .bfcl-row td {
-            padding: 10px 4px;
+        .model-row td {
+            padding: 8px 4px;
         }
 
-        .bfcl-top3 {
+        .model-top3 {
             color: var(--accent);
         }
 
-        .bfcl-provider {
+        .model-provider {
             color: #999;
             font-size: 0.7rem;
         }
 
-        .bfcl-acc {
+        .model-metric {
             text-align: right;
+            white-space: nowrap;
+        }
+
+        .model-meta {
+            margin-top: 12px;
+            font-size: 0.65rem;
+            color: #555;
+            text-align: center;
+        }
+
+        .model-source {
+            color: var(--accent);
+            text-decoration: none;
         }
 
         /* Clock rows */
@@ -270,11 +319,11 @@
                 <div class="card-content clocks-content" id="clocks-content"></div>
             </div>
 
-            <!-- 3. BFCL Tool Calling Leaderboard Widget -->
-            <div class="card row-span-2" id="widget-arena">
+            <!-- 3. DeepSWE Coding Agent Leaderboard Widget -->
+            <div class="card row-span-2" id="widget-deepswe">
                 <div class="card-header">
-                    <span class="card-title">🔧 Tool Calling Arena</span>
-                    <span style="font-size: 0.7rem; color: #666;">BFCL V4</span>
+                    <span class="card-title">🧪 DeepSWE Agents</span>
+                    <span style="font-size: 0.7rem; color: #666;">V1.1</span>
                 </div>
                 <div class="card-content">
                     <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
@@ -282,29 +331,58 @@
                             <tr style="border-bottom: 1px solid #333; text-align: left;">
                                 <th style="padding: 8px 4px; color: #888;">#</th>
                                 <th style="padding: 8px 4px; color: #888;">MODEL</th>
-                                <th style="padding: 8px 4px; text-align: right; color: #888;">ACC %</th>
+                                <th style="padding: 8px 4px; text-align: right; color: #888;">PASS</th>
                             </tr>
                         </thead>
-                        <tbody id="bfcl-tbody">
+                        <tbody id="deepswe-tbody">
                             <tr>
                                 <td colspan="3" style="padding: 20px; text-align: center; color: #555;">Loading...</td>
                             </tr>
                         </tbody>
                     </table>
                     <div style="margin-top: 15px; text-align: center;">
-                        <a href="https://gorilla.cs.berkeley.edu/leaderboard.html" target="_blank"
+                        <a href="https://deepswe.datacurve.ai/" target="_blank"
                             style="font-size: 0.75rem; color: var(--accent); text-decoration: none;">
-                            View Full BFCL Leaderboard →
+                            View Full DeepSWE Leaderboard →
                         </a>
                     </div>
-                    <div style="margin-top: 8px; font-size: 0.65rem; color: #444; text-align: center;">
-                        Berkeley Function-Calling Leaderboard
+                    <div class="model-meta" id="deepswe-meta">DeepSWE coding-agent benchmark</div>
+                </div>
+            </div>
+
+            <!-- 4. Artificial Analysis Intelligence Index Widget -->
+            <div class="card row-span-2" id="widget-intelligence">
+                <div class="card-header">
+                    <span class="card-title">🧠 Intelligence Index</span>
+                    <span style="font-size: 0.7rem; color: #666;">AA V4.1</span>
+                </div>
+                <div class="card-content">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid #333; text-align: left;">
+                                <th style="padding: 8px 4px; color: #888;">#</th>
+                                <th style="padding: 8px 4px; color: #888;">MODEL</th>
+                                <th style="padding: 8px 4px; text-align: right; color: #888;">INDEX</th>
+                            </tr>
+                        </thead>
+                        <tbody id="intelligence-tbody">
+                            <tr>
+                                <td colspan="3" style="padding: 20px; text-align: center; color: #555;">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 15px; text-align: center;">
+                        <a href="https://artificialanalysis.ai/leaderboards/models" target="_blank"
+                            style="font-size: 0.75rem; color: var(--accent); text-decoration: none;">
+                            View Full Intelligence Leaderboard →
+                        </a>
                     </div>
+                    <div class="model-meta" id="intelligence-meta">Artificial Analysis Intelligence Index</div>
                 </div>
             </div>
 
 
-            <!-- 4. Major Indices Widget (Wide) -->
+            <!-- 5. Major Indices Widget (Wide) -->
             <div class="card col-span-2" id="widget-indices">
                 <div class="card-header">
                     <span class="card-title">Global Markets</span>
@@ -595,49 +673,67 @@
         }
         initWeather();
 
-        // --- BFCL Leaderboard Widget ---
-        async function initBFCL() {
+        function formatMetric(value, suffix = '') {
+            return value === null || value === undefined ? '—' : `${value}${suffix}`;
+        }
+
+        async function loadLeaderboard(file, tbodyId, metaId, renderRow, label) {
             try {
-                const response = await fetch('bfcl-leaderboard.json');
+                const response = await fetch(file);
                 if (!response.ok) throw new Error('Failed to load leaderboard data');
 
                 const data = await response.json();
-                const tbody = document.getElementById('bfcl-tbody');
+                const tbody = document.getElementById(tbodyId);
 
-                // Render top 6 models
                 const models = data.leaderboard.slice(0, 6);
                 tbody.innerHTML = '';
-                models.forEach((m, i) => {
-                    const tr = document.createElement('tr');
-                    tr.className = 'bfcl-row';
-
-                    const rankTd = document.createElement('td');
-                    if (i < 3) rankTd.className = 'bfcl-top3';
-                    rankTd.textContent = m.rank;
-
-                    const nameTd = document.createElement('td');
-                    const providerSpan = document.createElement('span');
-                    providerSpan.className = 'bfcl-provider';
-                    providerSpan.textContent = m.provider;
-                    nameTd.appendChild(providerSpan);
-                    nameTd.appendChild(document.createElement('br'));
-                    nameTd.appendChild(document.createTextNode(m.model));
-
-                    const accTd = document.createElement('td');
-                    accTd.className = 'bfcl-acc' + (i < 3 ? ' bfcl-top3' : '');
-                    accTd.textContent = m.accuracy.toFixed(1);
-
-                    tr.append(rankTd, nameTd, accTd);
-                    tbody.appendChild(tr);
-                });
+                models.forEach((model, index) => tbody.appendChild(renderRow(model, index)));
+                const meta = document.getElementById(metaId);
+                meta.innerHTML = `${label} · Snapshot ${data.meta.last_updated}`;
 
             } catch (error) {
-                console.error('BFCL Error:', error);
-                document.getElementById('bfcl-tbody').innerHTML =
+                console.error(`${label} Error:`, error);
+                document.getElementById(tbodyId).innerHTML =
                     '<tr><td colspan="3" style="padding: 20px; text-align: center; color: #f66;">Failed to load</td></tr>';
             }
         }
-        initBFCL();
+
+        function createModelRow(model, index, metric) {
+            const tr = document.createElement('tr');
+            tr.className = 'model-row';
+            const rankTd = document.createElement('td');
+            rankTd.className = index < 3 ? 'model-top3' : '';
+            rankTd.textContent = model.rank;
+            const nameTd = document.createElement('td');
+            const providerSpan = document.createElement('span');
+            providerSpan.className = 'model-provider';
+            providerSpan.textContent = model.provider;
+            const modelLabel = model.reasoning_effort
+                ? `${model.model} [${model.reasoning_effort}]`
+                : model.model;
+            nameTd.append(providerSpan, document.createElement('br'), document.createTextNode(modelLabel));
+            const metricTd = document.createElement('td');
+            metricTd.className = `model-metric${index < 3 ? ' model-top3' : ''}`;
+            metricTd.textContent = metric;
+            tr.append(rankTd, nameTd, metricTd);
+            return tr;
+        }
+
+        loadLeaderboard(
+            'deepswe-leaderboard.json',
+            'deepswe-tbody',
+            'deepswe-meta',
+            (model, index) => createModelRow(model, index, `${model.pass_rate.toFixed(0)}%`),
+            '113 tasks'
+        );
+
+        loadLeaderboard(
+            'artificial-analysis-leaderboard.json',
+            'intelligence-tbody',
+            'intelligence-meta',
+            (model, index) => createModelRow(model, index, formatMetric(model.intelligence_index)),
+            'Artificial Analysis'
+        );
 
 
     </script>

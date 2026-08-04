@@ -9,10 +9,13 @@ Frontend (index.html, dashboard.html)
     │
     ├─ Backend Functions
     │   ├─ subscribe.js (Waitlist signup)
-    │   └─ update_bfcl_leaderboard.py (Data sync)
+    │   ├─ update_model_leaderboards.py (Data sync)
+    │   └─ update_model_leaderboards.yml (Daily refresh)
     │
     └─ Data
-        └─ bfcl-leaderboard.json (Tool calling metrics)
+        ├─ deepswe-leaderboard.json (DeepSWE snapshot)
+        ├─ artificial-analysis-leaderboard.json (Artificial Analysis snapshot)
+        └─ dashboard.html (Static model leaderboard rendering)
 ```
 
 ## Components
@@ -26,14 +29,14 @@ Frontend (index.html, dashboard.html)
 ### 2. Dashboard (`dashboard.html`)
 - Weather widget with smart advice
 - Multi-timezone clocks
-- BFCL tool calling leaderboard
+- DeepSWE coding-agent leaderboard
+- Artificial Analysis Intelligence Index
 - Market indices visualization
 - Financial news timeline
 
 ### 3. Backend
 - Cloudflare Worker for waitlist signup
-- Python script to update BFCL data
-- JSON data file for leaderboard
+- Checked-in JSON snapshots for leaderboard data
 
 ## Critical Feedback
 
@@ -49,7 +52,7 @@ Frontend (index.html, dashboard.html)
    - No fallback for TradingView widgets if they fail to load
 
 2. **Data Freshness**
-   - BFCL data requires manual updates via Python script
+   - Leaderboard snapshots are refreshed daily by GitHub Actions
    - Weather data only fetched on page load
 
 3. **Accessibility**

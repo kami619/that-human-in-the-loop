@@ -1,0 +1,222 @@
+{
+    "meta": {
+        "source": "Datacurve DeepSWE",
+        "url": "https://deepswe.datacurve.ai/",
+        "artifact_url": "https://deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json",
+        "version": "v1.1",
+        "last_updated": "2026-08-04",
+        "tasks": 113,
+        "description": "Long-horizon coding-agent benchmark with program-based verification"
+    },
+    "leaderboard": [
+        {
+            "rank": 1,
+            "model": "claude-opus-5",
+            "provider": "Anthropic",
+            "reasoning_effort": "max",
+            "pass_rate": 73.65,
+            "confidence_interval": 3.87,
+            "average_cost_usd": 11.837583271396396,
+            "output_tokens": 117565.6936936937,
+            "agent_steps": 99.0427927927928
+        },
+        {
+            "rank": 2,
+            "model": "gpt-5-6-sol",
+            "provider": "OpenAI",
+            "reasoning_effort": "max",
+            "pass_rate": 72.67,
+            "confidence_interval": 2.83,
+            "average_cost_usd": 8.386436346666667,
+            "output_tokens": 60013.64444444444,
+            "agent_steps": 61.25333333333333
+        },
+        {
+            "rank": 3,
+            "model": "claude-fable-5",
+            "provider": "Anthropic",
+            "reasoning_effort": "xhigh",
+            "pass_rate": 69.91,
+            "confidence_interval": 3.24,
+            "average_cost_usd": 13.414521495535714,
+            "output_tokens": 80352.1703539823,
+            "agent_steps": 68.40044247787611
+        },
+        {
+            "rank": 4,
+            "model": "gpt-5-6-terra",
+            "provider": "OpenAI",
+            "reasoning_effort": "max",
+            "pass_rate": 69.62,
+            "confidence_interval": 2.56,
+            "average_cost_usd": 4.945847263858093,
+            "output_tokens": 71938.62527716186,
+            "agent_steps": 75.9290465631929
+        },
+        {
+            "rank": 5,
+            "model": "kimi-k3",
+            "provider": "Kimi",
+            "reasoning_effort": "max",
+            "pass_rate": 68.51,
+            "confidence_interval": 4.54,
+            "average_cost_usd": 4.654682129933482,
+            "output_tokens": 81499.84257206209,
+            "agent_steps": 97.58758314855876
+        },
+        {
+            "rank": 6,
+            "model": "gpt-5-6-luna",
+            "provider": "OpenAI",
+            "reasoning_effort": "max",
+            "pass_rate": 67.19,
+            "confidence_interval": 3.99,
+            "average_cost_usd": 3.028116810267857,
+            "output_tokens": 73399.70758928571,
+            "agent_steps": 101.68080357142857
+        },
+        {
+            "rank": 7,
+            "model": "gpt-5-5",
+            "provider": "OpenAI",
+            "reasoning_effort": "xhigh",
+            "pass_rate": 67.04,
+            "confidence_interval": 6.47,
+            "average_cost_usd": 7.226236674778761,
+            "output_tokens": 46294.72345132743,
+            "agent_steps": 82.01548672566372
+        },
+        {
+            "rank": 8,
+            "model": "claude-opus-4-8",
+            "provider": "Anthropic",
+            "reasoning_effort": "max",
+            "pass_rate": 58.97,
+            "confidence_interval": 1.76,
+            "average_cost_usd": 13.222583593240094,
+            "output_tokens": 135031.67132867133,
+            "agent_steps": 120.0
+        },
+        {
+            "rank": 9,
+            "model": "qwen3-8-max",
+            "provider": "Alibaba",
+            "reasoning_effort": "xhigh",
+            "pass_rate": 57.46,
+            "confidence_interval": 2.66,
+            "average_cost_usd": 3.7290646500445437,
+            "output_tokens": 95075.18262806236,
+            "agent_steps": 111.33853006681514
+        },
+        {
+            "rank": 10,
+            "model": "claude-sonnet-5",
+            "provider": "Anthropic",
+            "reasoning_effort": "max",
+            "pass_rate": 53.85,
+            "confidence_interval": 4.24,
+            "average_cost_usd": 26.399858950791852,
+            "output_tokens": 214117.54977375566,
+            "agent_steps": 268.4547511312217
+        },
+        {
+            "rank": 11,
+            "model": "grok-4-5",
+            "provider": "xAI",
+            "reasoning_effort": "high",
+            "pass_rate": 53.76,
+            "confidence_interval": 2.28,
+            "average_cost_usd": 2.4157481725663716,
+            "output_tokens": 35525.33185840708,
+            "agent_steps": 61.33185840707964
+        },
+        {
+            "rank": 12,
+            "model": "muse-spark-1-1",
+            "provider": "Meta",
+            "reasoning_effort": "xhigh",
+            "pass_rate": 53.32,
+            "confidence_interval": 3.04,
+            "average_cost_usd": 2.361142644469026,
+            "output_tokens": 74008.4203539823,
+            "agent_steps": 95.82522123893806
+        },
+        {
+            "rank": 13,
+            "model": "gpt-5-4",
+            "provider": "OpenAI",
+            "reasoning_effort": "xhigh",
+            "pass_rate": 51.77,
+            "confidence_interval": 1.5,
+            "average_cost_usd": 5.6524577245575225,
+            "output_tokens": 71408.87389380531,
+            "agent_steps": 70.47123893805309
+        },
+        {
+            "rank": 14,
+            "model": "gemini-3-6-flash",
+            "provider": "Google",
+            "reasoning_effort": "high",
+            "pass_rate": 48.56,
+            "confidence_interval": 5.0,
+            "average_cost_usd": 3.532355313192905,
+            "output_tokens": 96978.28381374723,
+            "agent_steps": 108.31042128603104
+        },
+        {
+            "rank": 15,
+            "model": "glm-5-2",
+            "provider": "Z AI",
+            "reasoning_effort": "max",
+            "pass_rate": 43.78,
+            "confidence_interval": 1.73,
+            "average_cost_usd": 3.9199075743111114,
+            "output_tokens": 78175.30666666667,
+            "agent_steps": 129.12666666666667
+        },
+        {
+            "rank": 16,
+            "model": "gemini-3-5-flash",
+            "provider": "Google",
+            "reasoning_effort": "medium",
+            "pass_rate": 37.39,
+            "confidence_interval": 1.79,
+            "average_cost_usd": 7.341823985508849,
+            "output_tokens": 275777.50884955755,
+            "agent_steps": 85.71681415929204
+        },
+        {
+            "rank": 17,
+            "model": "kimi-k2-7-code",
+            "provider": "Kimi",
+            "reasoning_effort": null,
+            "pass_rate": 30.53,
+            "confidence_interval": 0.5,
+            "average_cost_usd": 2.815536243274336,
+            "output_tokens": 59297.24778761062,
+            "agent_steps": 149.1150442477876
+        },
+        {
+            "rank": 18,
+            "model": "claude-sonnet-4-6",
+            "provider": "Anthropic",
+            "reasoning_effort": "high",
+            "pass_rate": 29.93,
+            "confidence_interval": 4.09,
+            "average_cost_usd": 5.5223517987804875,
+            "output_tokens": 76160.31263858093,
+            "agent_steps": 133.65853658536585
+        },
+        {
+            "rank": 19,
+            "model": "gemini-3-1-pro-preview",
+            "provider": "Google",
+            "reasoning_effort": "high",
+            "pass_rate": 11.75,
+            "confidence_interval": 2.49,
+            "average_cost_usd": 9.48151874855876,
+            "output_tokens": 196386.1019955654,
+            "agent_steps": 81.39024390243902
+        }
+    ]
+}

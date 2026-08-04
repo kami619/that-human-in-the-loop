@@ -1,0 +1,71 @@
+{
+    "meta": {
+        "source": "Artificial Analysis Intelligence Index",
+        "url": "https://artificialanalysis.ai/leaderboards/models",
+        "version": "4.1",
+        "last_updated": "2026-08-04",
+        "description": "Independent model intelligence, cost, and performance comparison"
+    },
+    "leaderboard": [
+        {
+            "rank": 1,
+            "model": "Claude Opus 5 (max)",
+            "provider": "Anthropic",
+            "intelligence_index": 61,
+            "cost_per_task_usd": 2.34,
+            "output_speed_tokens_per_second": 56,
+            "latency_first_chunk_seconds": 63.43,
+            "total_response_seconds": 72.42
+        },
+        {
+            "rank": 2,
+            "model": "Claude Opus 5 (xhigh)",
+            "provider": "Anthropic",
+            "intelligence_index": 60,
+            "cost_per_task_usd": 1.8,
+            "output_speed_tokens_per_second": 57,
+            "latency_first_chunk_seconds": 31.21,
+            "total_response_seconds": 40.01
+        },
+        {
+            "rank": 3,
+            "model": "Claude Fable 5 (with fallback)",
+            "provider": "Anthropic",
+            "intelligence_index": 60,
+            "cost_per_task_usd": 3.15,
+            "output_speed_tokens_per_second": 73,
+            "latency_first_chunk_seconds": 83.3,
+            "total_response_seconds": 90.19
+        },
+        {
+            "rank": 4,
+            "model": "GPT-5.6 Sol (max)",
+            "provider": "OpenAI",
+            "intelligence_index": 59,
+            "cost_per_task_usd": 1.23,
+            "output_speed_tokens_per_second": 71,
+            "latency_first_chunk_seconds": 131.39,
+            "total_response_seconds": 138.47
+        },
+        {
+            "rank": 5,
+            "model": "Claude Opus 5 (high)",
+            "provider": "Anthropic",
+            "intelligence_index": 59,
+            "cost_per_task_usd": 1.23,
+            "output_speed_tokens_per_second": 54,
+            "latency_first_chunk_seconds": 17.72,
+            "total_response_seconds": 26.9
+        },
+        {
+            "rank": 6,
+            "model": "GPT-5.6 Sol (xhigh)",
+            "provider": "OpenAI",
+            "intelligence_index": 58,
+            "cost_per_task_usd": 0.83,
+            "output_speed_tokens_per_second": 72,
+            "latency_first_chunk_seconds": 48,
+            "total_response_seconds": 54.91
+        }
+    ]
+}

@@ -1,9 +1,7 @@
-name: Update BFCL Leaderboard
+name: Update Model Leaderboards
 
 on:
   schedule:
-    # 5 AM EST is 10:00 UTC (during Standard Time) or 09:00 UTC (Daylight Savings)
-    # The user requested 5 AM EST. EST is UTC-5. So 05:00 + 5 = 10:00 UTC.
     - cron: '0 10 * * *'
   workflow_dispatch: # Allow manual trigger for testing
 
@@ -23,12 +21,6 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Cache pip dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-requests
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -38,14 +30,16 @@ jobs:
         run: |
           python -m unittest discover -s functions -p "test_*.py"
 
-      - name: Run update script
+      - name: Run leaderboard update
+        env:
+          ARTIFICIAL_ANALYSIS_API_KEY: ${{ secrets.ARTIFICIAL_ANALYSIS_API_KEY }}
         run: |
-          python functions/update_bfcl_leaderboard.py
+          python functions/update_model_leaderboards.py
 
       - name: Check for changes
         id: git-check
         run: |
-          git diff --exit-code bfcl-leaderboard.json || echo "changes=true" >> $GITHUB_OUTPUT
+          git diff --exit-code deepswe-leaderboard.json artificial-analysis-leaderboard.json || echo "changes=true" >> $GITHUB_OUTPUT
 
       - name: Commit and push changes
         if: steps.git-check.outputs.changes == 'true'
@@ -55,13 +49,13 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-          BRANCH="bfcl-update-$(date +%Y%m%d)"
+          BRANCH="leaderboard-update-$(date +%Y%m%d)"
           git checkout -b "$BRANCH"
 
-          git add bfcl-leaderboard.json
-          git commit -m "chore: update BFCL leaderboard data"
+          git add deepswe-leaderboard.json artificial-analysis-leaderboard.json
+          git commit -m "chore: update model leaderboard data"
 
           git push -u origin "$BRANCH"
-          gh pr create --title "chore: update BFCL leaderboard data" \
-            --body "Automated daily BFCL leaderboard update." \
+          gh pr create --title "chore: update model leaderboard data" \
+            --body "Automated daily DeepSWE and Artificial Analysis leaderboard update." \
             --base main || echo "PR already exists"
