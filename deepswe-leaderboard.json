@@ -4,7 +4,7 @@
         "url": "https://deepswe.datacurve.ai/",
         "artifact_url": "https://deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json",
         "version": "v1.1",
-        "last_updated": "2026-08-04",
+        "last_updated": "2026-08-07",
         "tasks": 113,
         "description": "Long-horizon coding-agent benchmark with program-based verification"
     },
@@ -110,6 +110,17 @@
         },
         {
             "rank": 10,
+            "model": "muse-spark-1-2",
+            "provider": "Meta",
+            "reasoning_effort": "xhigh",
+            "pass_rate": 54.87,
+            "confidence_interval": 2.12,
+            "average_cost_usd": 3.6955048180309733,
+            "output_tokens": 99226.38053097345,
+            "agent_steps": 100.75884955752213
+        },
+        {
+            "rank": 11,
             "model": "claude-sonnet-5",
             "provider": "Anthropic",
             "reasoning_effort": "max",
@@ -120,7 +131,7 @@
             "agent_steps": 268.4547511312217
         },
         {
-            "rank": 11,
+            "rank": 12,
             "model": "grok-4-5",
             "provider": "xAI",
             "reasoning_effort": "high",
@@ -131,7 +142,18 @@
             "agent_steps": 61.33185840707964
         },
         {
-            "rank": 12,
+            "rank": 13,
+            "model": "deepseek-v4-flash",
+            "provider": "Unknown",
+            "reasoning_effort": "max",
+            "pass_rate": 53.32,
+            "confidence_interval": 3.57,
+            "average_cost_usd": 0.10023560370265487,
+            "output_tokens": 107687.02212389381,
+            "agent_steps": 152.87610619469027
+        },
+        {
+            "rank": 14,
             "model": "muse-spark-1-1",
             "provider": "Meta",
             "reasoning_effort": "xhigh",
@@ -142,7 +164,7 @@
             "agent_steps": 95.82522123893806
         },
         {
-            "rank": 13,
+            "rank": 15,
             "model": "gpt-5-4",
             "provider": "OpenAI",
             "reasoning_effort": "xhigh",
@@ -153,7 +175,7 @@
             "agent_steps": 70.47123893805309
         },
         {
-            "rank": 14,
+            "rank": 16,
             "model": "gemini-3-6-flash",
             "provider": "Google",
             "reasoning_effort": "high",
@@ -164,7 +186,7 @@
             "agent_steps": 108.31042128603104
         },
         {
-            "rank": 15,
+            "rank": 17,
             "model": "glm-5-2",
             "provider": "Z AI",
             "reasoning_effort": "max",
@@ -175,7 +197,7 @@
             "agent_steps": 129.12666666666667
         },
         {
-            "rank": 16,
+            "rank": 18,
             "model": "gemini-3-5-flash",
             "provider": "Google",
             "reasoning_effort": "medium",
@@ -186,7 +208,7 @@
             "agent_steps": 85.71681415929204
         },
         {
-            "rank": 17,
+            "rank": 19,
             "model": "kimi-k2-7-code",
             "provider": "Kimi",
             "reasoning_effort": null,
@@ -197,7 +219,7 @@
             "agent_steps": 149.1150442477876
         },
         {
-            "rank": 18,
+            "rank": 20,
             "model": "claude-sonnet-4-6",
             "provider": "Anthropic",
             "reasoning_effort": "high",
@@ -206,17 +228,6 @@
             "average_cost_usd": 5.5223517987804875,
             "output_tokens": 76160.31263858093,
             "agent_steps": 133.65853658536585
-        },
-        {
-            "rank": 19,
-            "model": "gemini-3-1-pro-preview",
-            "provider": "Google",
-            "reasoning_effort": "high",
-            "pass_rate": 11.75,
-            "confidence_interval": 2.49,
-            "average_cost_usd": 9.48151874855876,
-            "output_tokens": 196386.1019955654,
-            "agent_steps": 81.39024390243902
         }
     ]
 }

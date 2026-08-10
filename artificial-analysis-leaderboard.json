@@ -2,70 +2,211 @@
     "meta": {
         "source": "Artificial Analysis Intelligence Index",
         "url": "https://artificialanalysis.ai/leaderboards/models",
+        "api_url": "https://artificialanalysis.ai/api/v2/language/models/free",
         "version": "4.1",
-        "last_updated": "2026-08-04",
+        "last_updated": "2026-08-10",
         "description": "Independent model intelligence, cost, and performance comparison"
     },
     "leaderboard": [
         {
-            "rank": 1,
-            "model": "Claude Opus 5 (max)",
+            "model": "Claude Opus 5 (Adaptive Reasoning, Max Effort)",
             "provider": "Anthropic",
-            "intelligence_index": 61,
-            "cost_per_task_usd": 2.34,
-            "output_speed_tokens_per_second": 56,
-            "latency_first_chunk_seconds": 63.43,
-            "total_response_seconds": 72.42
+            "intelligence_index": 63.1,
+            "cost_per_task_usd": 2.3369,
+            "output_speed_tokens_per_second": 57.13,
+            "latency_first_chunk_seconds": 30.61,
+            "total_response_seconds": 39.36,
+            "rank": 1
         },
         {
-            "rank": 2,
-            "model": "Claude Opus 5 (xhigh)",
+            "model": "Claude Opus 5 (Adaptive Reasoning, Xhigh Effort)",
             "provider": "Anthropic",
-            "intelligence_index": 60,
-            "cost_per_task_usd": 1.8,
-            "output_speed_tokens_per_second": 57,
-            "latency_first_chunk_seconds": 31.21,
-            "total_response_seconds": 40.01
+            "intelligence_index": 62.5,
+            "cost_per_task_usd": 1.8012,
+            "output_speed_tokens_per_second": 58.07,
+            "latency_first_chunk_seconds": 23.72,
+            "total_response_seconds": 32.33,
+            "rank": 2
         },
         {
-            "rank": 3,
-            "model": "Claude Fable 5 (with fallback)",
+            "model": "Claude Fable 5 (Adaptive Reasoning, Max Effort, Opus 4.8 Fallback)",
             "provider": "Anthropic",
-            "intelligence_index": 60,
-            "cost_per_task_usd": 3.15,
-            "output_speed_tokens_per_second": 73,
-            "latency_first_chunk_seconds": 83.3,
-            "total_response_seconds": 90.19
+            "intelligence_index": 62.1,
+            "cost_per_task_usd": 3.1396,
+            "output_speed_tokens_per_second": 69.66,
+            "latency_first_chunk_seconds": 124.1,
+            "total_response_seconds": 131.28,
+            "rank": 3
         },
         {
-            "rank": 4,
+            "model": "Claude Opus 5 (Adaptive Reasoning, High Effort)",
+            "provider": "Anthropic",
+            "intelligence_index": 61.5,
+            "cost_per_task_usd": 1.2268,
+            "output_speed_tokens_per_second": 57.46,
+            "latency_first_chunk_seconds": 10.67,
+            "total_response_seconds": 19.37,
+            "rank": 4
+        },
+        {
             "model": "GPT-5.6 Sol (max)",
             "provider": "OpenAI",
-            "intelligence_index": 59,
-            "cost_per_task_usd": 1.23,
-            "output_speed_tokens_per_second": 71,
-            "latency_first_chunk_seconds": 131.39,
-            "total_response_seconds": 138.47
+            "intelligence_index": 60.9,
+            "cost_per_task_usd": 1.2312,
+            "output_speed_tokens_per_second": 65.38,
+            "latency_first_chunk_seconds": 122,
+            "total_response_seconds": 129.64,
+            "rank": 5
         },
         {
-            "rank": 5,
-            "model": "Claude Opus 5 (high)",
-            "provider": "Anthropic",
-            "intelligence_index": 59,
-            "cost_per_task_usd": 1.23,
-            "output_speed_tokens_per_second": 54,
-            "latency_first_chunk_seconds": 17.72,
-            "total_response_seconds": 26.9
+            "model": "Kimi K3 (max)",
+            "provider": "Kimi",
+            "intelligence_index": 59.7,
+            "cost_per_task_usd": 0.8375,
+            "output_speed_tokens_per_second": 43.51,
+            "latency_first_chunk_seconds": 2.37,
+            "total_response_seconds": 59.82,
+            "rank": 6
         },
         {
-            "rank": 6,
             "model": "GPT-5.6 Sol (xhigh)",
             "provider": "OpenAI",
-            "intelligence_index": 58,
-            "cost_per_task_usd": 0.83,
-            "output_speed_tokens_per_second": 72,
-            "latency_first_chunk_seconds": 48,
-            "total_response_seconds": 54.91
+            "intelligence_index": 59,
+            "cost_per_task_usd": 0.8072,
+            "output_speed_tokens_per_second": 70.73,
+            "latency_first_chunk_seconds": 49.28,
+            "total_response_seconds": 56.35,
+            "rank": 7
+        },
+        {
+            "model": "Claude Opus 5 (Adaptive Reasoning, Medium Effort)",
+            "provider": "Anthropic",
+            "intelligence_index": 58.6,
+            "cost_per_task_usd": 0.7243,
+            "output_speed_tokens_per_second": 57.1,
+            "latency_first_chunk_seconds": 5.84,
+            "total_response_seconds": 14.6,
+            "rank": 8
+        },
+        {
+            "model": "Qwen3.8 Max",
+            "provider": "Alibaba",
+            "intelligence_index": 58.1,
+            "cost_per_task_usd": 1.132,
+            "output_speed_tokens_per_second": 84.02,
+            "latency_first_chunk_seconds": 2.99,
+            "total_response_seconds": 32.75,
+            "rank": 9
+        },
+        {
+            "model": "GPT-5.6 Sol (high)",
+            "provider": "OpenAI",
+            "intelligence_index": 57.3,
+            "cost_per_task_usd": 0.5477,
+            "output_speed_tokens_per_second": 67.69,
+            "latency_first_chunk_seconds": 14.5,
+            "total_response_seconds": 21.89,
+            "rank": 10
+        },
+        {
+            "model": "Claude Opus 4.8 (Adaptive Reasoning, Max Effort)",
+            "provider": "Anthropic",
+            "intelligence_index": 57.3,
+            "cost_per_task_usd": 2.0315,
+            "output_speed_tokens_per_second": 60.38,
+            "latency_first_chunk_seconds": 20.33,
+            "total_response_seconds": 28.61,
+            "rank": 11
+        },
+        {
+            "model": "Muse Spark 1.2 (xhigh)",
+            "provider": "Meta",
+            "intelligence_index": 56.8,
+            "cost_per_task_usd": 0.3992,
+            "output_speed_tokens_per_second": null,
+            "latency_first_chunk_seconds": null,
+            "total_response_seconds": null,
+            "rank": 12
+        },
+        {
+            "model": "GPT-5.6 Terra (max)",
+            "provider": "OpenAI",
+            "intelligence_index": 56.6,
+            "cost_per_task_usd": 0.508,
+            "output_speed_tokens_per_second": 150.62,
+            "latency_first_chunk_seconds": 166.47,
+            "total_response_seconds": 169.79,
+            "rank": 13
+        },
+        {
+            "model": "GPT-5.5 (xhigh)",
+            "provider": "OpenAI",
+            "intelligence_index": 56.3,
+            "cost_per_task_usd": 1.1747,
+            "output_speed_tokens_per_second": 90.24,
+            "latency_first_chunk_seconds": 93.36,
+            "total_response_seconds": 98.9,
+            "rank": 14
+        },
+        {
+            "model": "Grok 4.5 (high)",
+            "provider": "SpaceXAI",
+            "intelligence_index": 55.8,
+            "cost_per_task_usd": 0.3601,
+            "output_speed_tokens_per_second": 61.23,
+            "latency_first_chunk_seconds": 8.77,
+            "total_response_seconds": 16.93,
+            "rank": 15
+        },
+        {
+            "model": "GPT-5.6 Sol (medium)",
+            "provider": "OpenAI",
+            "intelligence_index": 55.6,
+            "cost_per_task_usd": 0.3717,
+            "output_speed_tokens_per_second": 70.57,
+            "latency_first_chunk_seconds": 4.39,
+            "total_response_seconds": 11.48,
+            "rank": 16
+        },
+        {
+            "model": "Claude Sonnet 5 (Adaptive Reasoning, Max Effort)",
+            "provider": "Anthropic",
+            "intelligence_index": 55.3,
+            "cost_per_task_usd": 1.7173,
+            "output_speed_tokens_per_second": 74.31,
+            "latency_first_chunk_seconds": 164.5,
+            "total_response_seconds": 171.23,
+            "rank": 17
+        },
+        {
+            "model": "Claude Opus 4.7 (Adaptive Reasoning, Max Effort)",
+            "provider": "Anthropic",
+            "intelligence_index": 55,
+            "cost_per_task_usd": 2.2285,
+            "output_speed_tokens_per_second": 51.97,
+            "latency_first_chunk_seconds": 14.28,
+            "total_response_seconds": 23.9,
+            "rank": 18
+        },
+        {
+            "model": "GPT-5.5 (high)",
+            "provider": "OpenAI",
+            "intelligence_index": 54.7,
+            "cost_per_task_usd": 0.8033,
+            "output_speed_tokens_per_second": 87.95,
+            "latency_first_chunk_seconds": 20.32,
+            "total_response_seconds": 26.01,
+            "rank": 19
+        },
+        {
+            "model": "Muse Spark 1.1 (xhigh)",
+            "provider": "Meta",
+            "intelligence_index": 53.2,
+            "cost_per_task_usd": 0.2923,
+            "output_speed_tokens_per_second": 232.3,
+            "latency_first_chunk_seconds": 2.25,
+            "total_response_seconds": 13.01,
+            "rank": 20
         }
     ]
 }
