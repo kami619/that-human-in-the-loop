@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   update-leaderboard:
@@ -59,6 +60,14 @@ jobs:
           git commit -m "chore: update model leaderboard data"
 
           git push -u origin "$BRANCH"
-          gh pr create --title "chore: update model leaderboard data" \
-            --body "Automated daily DeepSWE and Artificial Analysis leaderboard update." \
-            --base main || echo "PR already exists"
+
+          # Only the "PR is already open for this branch" case is tolerable. A
+          # blanket `|| echo ...` also swallows permission and network errors,
+          # which is how a token missing pull-requests:write went unnoticed.
+          if [ -n "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
+            echo "PR already open for $BRANCH"
+          else
+            gh pr create --title "chore: update model leaderboard data" \
+              --body "Automated daily DeepSWE and Artificial Analysis leaderboard update." \
+              --base main
+          fi
