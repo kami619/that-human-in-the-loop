@@ -11,7 +11,10 @@ permissions:
 jobs:
   update-leaderboard:
     runs-on: ubuntu-latest
-    
+    # ARTIFICIAL_ANALYSIS_API_KEY lives as a "prod" environment secret, not a
+    # repo secret — without this the expansion is empty and the script exits 1.
+    environment: prod
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
