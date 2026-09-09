@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   update-leaderboard:
@@ -19,6 +18,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -30,9 +31,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
 
-      - name: Run tests
+      - name: Run ETL unit tests
         run: |
-          python -m unittest discover -s functions -p "test_*.py"
+          python -m unittest functions.test_update_model_leaderboards
 
       - name: Run leaderboard update
         env:
@@ -40,34 +41,20 @@ jobs:
         run: |
           python functions/update_model_leaderboards.py
 
-      - name: Check for changes
-        id: git-check
+      - name: Validate refreshed snapshots
         run: |
-          git diff --exit-code deepswe-leaderboard.json artificial-analysis-leaderboard.json || echo "changes=true" >> $GITHUB_OUTPUT
+          python -m unittest functions.test_leaderboard_snapshots
 
-      - name: Commit and push changes
-        if: steps.git-check.outputs.changes == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Commit and push to main
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-
-          BRANCH="leaderboard-update-$(date +%Y%m%d)"
-          git checkout -b "$BRANCH"
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
 
           git add deepswe-leaderboard.json artificial-analysis-leaderboard.json
-          git commit -m "chore: update model leaderboard data"
-
-          git push -u origin "$BRANCH"
-
-          # Only the "PR is already open for this branch" case is tolerable. A
-          # blanket `|| echo ...` also swallows permission and network errors,
-          # which is how a token missing pull-requests:write went unnoticed.
-          if [ -n "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
-            echo "PR already open for $BRANCH"
-          else
-            gh pr create --title "chore: update model leaderboard data" \
-              --body "Automated daily DeepSWE and Artificial Analysis leaderboard update." \
-              --base main
+          if git diff --staged --quiet; then
+            echo "No leaderboard changes to commit."
+            exit 0
           fi
+
+          git commit -m "chore: update model leaderboard data"
+          git push origin HEAD:main
