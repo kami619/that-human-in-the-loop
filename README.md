@@ -28,7 +28,7 @@ npx serve .
 | DeepSWE snapshot | Coding-agent leaderboard | None |
 | Artificial Analysis snapshot | Intelligence Index | None |
 
-The dashboard uses checked-in snapshots in `deepswe-leaderboard.json` and `artificial-analysis-leaderboard.json`. They are refreshed daily by GitHub Actions (`.github/workflows/update_model_leaderboards.yml`). Each widget displays its source and snapshot date. Artificial Analysis API access is kept server-side in the workflow.
+The dashboard uses checked-in snapshots in `deepswe-leaderboard.json` and `artificial-analysis-leaderboard.json`. They are refreshed daily by GitHub Actions (`.github/workflows/update_model_leaderboards.yml`), which commits directly to `main` when the data changes. Each widget displays its source and snapshot date. Artificial Analysis API access is kept server-side in the workflow.
 
 ## Agent Projects
 
