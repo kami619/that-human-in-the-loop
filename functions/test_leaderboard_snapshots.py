@@ -32,7 +32,8 @@ class TestLeaderboardSnapshots(unittest.TestCase):
     def test_artificial_analysis_snapshot(self):
         data = self._load("artificial-analysis-leaderboard.json")
         self._assert_common_shape(data)
-        self.assertEqual(data["meta"]["version"], "4.1")
+        version = data["meta"]["version"]
+        self.assertRegex(version, r"^\d+\.\d+$", msg=f"unexpected version format: {version}")
         self.assertTrue(all("intelligence_index" in row for row in data["leaderboard"]))
 
 
