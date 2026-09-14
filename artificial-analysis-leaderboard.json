@@ -4,7 +4,7 @@
         "url": "https://artificialanalysis.ai/leaderboards/models",
         "api_url": "https://artificialanalysis.ai/api/v2/language/models/free",
         "version": "4.3",
-        "last_updated": "2026-09-13",
+        "last_updated": "2026-09-14",
         "description": "Independent model intelligence, cost, and performance comparison"
     },
     "leaderboard": [
