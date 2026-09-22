@@ -4,7 +4,7 @@
         "url": "https://deepswe.datacurve.ai/",
         "artifact_url": "https://deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json",
         "version": "v1.1",
-        "last_updated": "2026-09-03",
+        "last_updated": "2026-09-22",
         "tasks": 113,
         "description": "Long-horizon coding-agent benchmark with program-based verification"
     },
@@ -16,7 +16,7 @@
             "reasoning_effort": "xhigh",
             "pass_rate": 74.12,
             "confidence_interval": 2.87,
-            "average_cost_usd": 6.52377356460177,
+            "average_cost_usd": 4.429117203539823,
             "output_tokens": 29557.327433628318,
             "agent_steps": 28.754424778761063
         },
