@@ -4,7 +4,7 @@
         "url": "https://artificialanalysis.ai/leaderboards/models",
         "api_url": "https://artificialanalysis.ai/api/v2/language/models/free",
         "version": "4.3",
-        "last_updated": "2026-10-16",
+        "last_updated": "2026-10-17",
         "description": "Independent model intelligence, cost, and performance comparison"
     },
     "leaderboard": [
@@ -13,9 +13,9 @@
             "provider": "Anthropic",
             "intelligence_index": 57.6,
             "cost_per_task_usd": 5.982,
-            "output_speed_tokens_per_second": 96.9,
-            "latency_first_chunk_seconds": 666.74,
-            "total_response_seconds": 671.9,
+            "output_speed_tokens_per_second": 96.87,
+            "latency_first_chunk_seconds": 664.6,
+            "total_response_seconds": 669.76,
             "rank": 1
         },
         {
@@ -23,9 +23,9 @@
             "provider": "Anthropic",
             "intelligence_index": 56,
             "cost_per_task_usd": 5.4609,
-            "output_speed_tokens_per_second": 141.37,
-            "latency_first_chunk_seconds": 416.61,
-            "total_response_seconds": 420.15,
+            "output_speed_tokens_per_second": 139.75,
+            "latency_first_chunk_seconds": 380.34,
+            "total_response_seconds": 383.92,
             "rank": 2
         },
         {
@@ -33,9 +33,9 @@
             "provider": "Anthropic",
             "intelligence_index": 56,
             "cost_per_task_usd": 3.4591,
-            "output_speed_tokens_per_second": 87.64,
-            "latency_first_chunk_seconds": 131.38,
-            "total_response_seconds": 137.08,
+            "output_speed_tokens_per_second": 86.04,
+            "latency_first_chunk_seconds": 132.03,
+            "total_response_seconds": 137.85,
             "rank": 3
         },
         {
@@ -53,9 +53,9 @@
             "provider": "Anthropic",
             "intelligence_index": 53.6,
             "cost_per_task_usd": 1.8225,
-            "output_speed_tokens_per_second": 86.63,
-            "latency_first_chunk_seconds": 46.45,
-            "total_response_seconds": 52.22,
+            "output_speed_tokens_per_second": 79.4,
+            "latency_first_chunk_seconds": 33.77,
+            "total_response_seconds": 40.07,
             "rank": 5
         },
         {
@@ -63,9 +63,9 @@
             "provider": "Anthropic",
             "intelligence_index": 53.4,
             "cost_per_task_usd": 7.6297,
-            "output_speed_tokens_per_second": 71.01,
-            "latency_first_chunk_seconds": 257.75,
-            "total_response_seconds": 264.79,
+            "output_speed_tokens_per_second": 70.45,
+            "latency_first_chunk_seconds": 220.12,
+            "total_response_seconds": 227.22,
             "rank": 6
         },
         {
@@ -73,9 +73,9 @@
             "provider": "Anthropic",
             "intelligence_index": 53.2,
             "cost_per_task_usd": 5.9783,
-            "output_speed_tokens_per_second": 66.39,
-            "latency_first_chunk_seconds": 69.44,
-            "total_response_seconds": 76.97,
+            "output_speed_tokens_per_second": 63.72,
+            "latency_first_chunk_seconds": 67.67,
+            "total_response_seconds": 75.51,
             "rank": 7
         },
         {
@@ -83,9 +83,9 @@
             "provider": "OpenAI",
             "intelligence_index": 52.7,
             "cost_per_task_usd": 3.2575,
-            "output_speed_tokens_per_second": 54.68,
-            "latency_first_chunk_seconds": 252.93,
-            "total_response_seconds": 262.08,
+            "output_speed_tokens_per_second": 57.46,
+            "latency_first_chunk_seconds": 305.27,
+            "total_response_seconds": 313.97,
             "rank": 8
         },
         {
@@ -93,9 +93,9 @@
             "provider": "Google",
             "intelligence_index": 52.6,
             "cost_per_task_usd": 1.9903,
-            "output_speed_tokens_per_second": 99.53,
-            "latency_first_chunk_seconds": 44.7,
-            "total_response_seconds": 49.72,
+            "output_speed_tokens_per_second": null,
+            "latency_first_chunk_seconds": null,
+            "total_response_seconds": null,
             "rank": 9
         },
         {
@@ -103,9 +103,9 @@
             "provider": "OpenAI",
             "intelligence_index": 52.4,
             "cost_per_task_usd": 2.3088,
-            "output_speed_tokens_per_second": 52.97,
-            "latency_first_chunk_seconds": 138.9,
-            "total_response_seconds": 148.34,
+            "output_speed_tokens_per_second": 55.26,
+            "latency_first_chunk_seconds": 160,
+            "total_response_seconds": 169.05,
             "rank": 10
         },
         {
@@ -113,9 +113,9 @@
             "provider": "Meta",
             "intelligence_index": 52.4,
             "cost_per_task_usd": 4.5157,
-            "output_speed_tokens_per_second": 183.95,
-            "latency_first_chunk_seconds": 42.17,
-            "total_response_seconds": 55.76,
+            "output_speed_tokens_per_second": 178.14,
+            "latency_first_chunk_seconds": 40.62,
+            "total_response_seconds": 54.66,
             "rank": 11
         },
         {
@@ -123,9 +123,9 @@
             "provider": "Anthropic",
             "intelligence_index": 51.9,
             "cost_per_task_usd": 2.012,
-            "output_speed_tokens_per_second": 114.32,
-            "latency_first_chunk_seconds": 25.95,
-            "total_response_seconds": 30.33,
+            "output_speed_tokens_per_second": 110.7,
+            "latency_first_chunk_seconds": 24.23,
+            "total_response_seconds": 28.75,
             "rank": 12
         },
         {
@@ -133,9 +133,9 @@
             "provider": "OpenAI",
             "intelligence_index": 51.8,
             "cost_per_task_usd": 0.7242,
-            "output_speed_tokens_per_second": 61.06,
-            "latency_first_chunk_seconds": 285.47,
-            "total_response_seconds": 293.66,
+            "output_speed_tokens_per_second": 66.1,
+            "latency_first_chunk_seconds": 293.9,
+            "total_response_seconds": 301.47,
             "rank": 13
         },
         {
@@ -143,9 +143,9 @@
             "provider": "Anthropic",
             "intelligence_index": 51.2,
             "cost_per_task_usd": 3.9125,
-            "output_speed_tokens_per_second": 65.24,
+            "output_speed_tokens_per_second": 56.87,
             "latency_first_chunk_seconds": 11.66,
-            "total_response_seconds": 19.33,
+            "total_response_seconds": 20.46,
             "rank": 14
         },
         {
@@ -153,9 +153,9 @@
             "provider": "Anthropic",
             "intelligence_index": 51.2,
             "cost_per_task_usd": 1.336,
-            "output_speed_tokens_per_second": 88.13,
-            "latency_first_chunk_seconds": 17.72,
-            "total_response_seconds": 23.39,
+            "output_speed_tokens_per_second": 81.99,
+            "latency_first_chunk_seconds": 18.34,
+            "total_response_seconds": 24.44,
             "rank": 15
         },
         {
@@ -164,8 +164,8 @@
             "intelligence_index": 51,
             "cost_per_task_usd": 0.3929,
             "output_speed_tokens_per_second": 58.49,
-            "latency_first_chunk_seconds": 122.33,
-            "total_response_seconds": 130.88,
+            "latency_first_chunk_seconds": 120.56,
+            "total_response_seconds": 129.1,
             "rank": 16
         },
         {
@@ -173,9 +173,9 @@
             "provider": "OpenAI",
             "intelligence_index": 50.9,
             "cost_per_task_usd": 1.7253,
-            "output_speed_tokens_per_second": 52.08,
+            "output_speed_tokens_per_second": 52.73,
             "latency_first_chunk_seconds": 51.63,
-            "total_response_seconds": 61.23,
+            "total_response_seconds": 61.11,
             "rank": 17
         },
         {
@@ -183,9 +183,9 @@
             "provider": "Anthropic",
             "intelligence_index": 50.8,
             "cost_per_task_usd": 5.8584,
-            "output_speed_tokens_per_second": 59.87,
-            "latency_first_chunk_seconds": 72.46,
-            "total_response_seconds": 80.81,
+            "output_speed_tokens_per_second": 57.95,
+            "latency_first_chunk_seconds": 53.09,
+            "total_response_seconds": 61.71,
             "rank": 18
         },
         {
@@ -193,9 +193,9 @@
             "provider": "OpenAI",
             "intelligence_index": 50.2,
             "cost_per_task_usd": 0.3191,
-            "output_speed_tokens_per_second": 58.16,
-            "latency_first_chunk_seconds": 41.58,
-            "total_response_seconds": 50.18,
+            "output_speed_tokens_per_second": 54.98,
+            "latency_first_chunk_seconds": 43.7,
+            "total_response_seconds": 52.8,
             "rank": 19
         },
         {
@@ -203,9 +203,9 @@
             "provider": "Anthropic",
             "intelligence_index": 49.7,
             "cost_per_task_usd": 4.8778,
-            "output_speed_tokens_per_second": 59.62,
-            "latency_first_chunk_seconds": 33.74,
-            "total_response_seconds": 42.13,
+            "output_speed_tokens_per_second": 52.94,
+            "latency_first_chunk_seconds": 27.22,
+            "total_response_seconds": 36.67,
             "rank": 20
         }
     ]
