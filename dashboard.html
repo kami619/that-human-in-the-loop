@@ -150,7 +150,11 @@
 
         #widget-indices {
             grid-column: 1 / span 3;
-            grid-row: 3;
+            grid-row: 3 / span 2;
+        }
+
+        #widget-indices .tradingview-widget-container {
+            min-height: var(--markets-embed-min-height, 480px);
         }
 
         @media (max-width: 1024px) {
@@ -383,71 +387,13 @@
 
 
             <!-- 5. Major Indices Widget (Wide) -->
-            <div class="card col-span-2" id="widget-indices">
+            <div class="card col-span-2 row-span-2" id="widget-indices">
                 <div class="card-header">
                     <span class="card-title">Global Markets</span>
                 </div>
                 <div class="card-content" style="padding:0; overflow:hidden; position:relative;">
-                    <!-- TradingView Widget BEGIN -->
-                    <div class="tradingview-widget-container">
-                        <div class="tradingview-widget-container__widget">
-                        </div>
-                        <script type="text/javascript"
-                            src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-                                {
-                                    "colorTheme": "dark",
-                                        "dateRange": "12M",
-                                            "showChart": true,
-                                                "locale": "en",
-                                                    "largeChartUrl": "",
-                                                        "isTransparent": true,
-                                                            "showSymbolLogo": true,
-                                                                "showFloatingTooltip": false,
-                                                                    "width": "100%",
-                                                                        "height": "100%",
-                                                                            "plotLineColorGrowing": "rgba(0, 255, 136, 1)",
-                                                                                "plotLineColorFalling": "rgba(255, 0, 0, 1)",
-                                                                                    "gridLineColor": "rgba(240, 243, 250, 0)",
-                                                                                        "scaleFontColor": "rgba(106, 109, 120, 1)",
-                                                                                            "belowLineFillColorGrowing": "rgba(0, 255, 136, 0.12)",
-                                                                                                "belowLineFillColorFalling": "rgba(255, 0, 0, 0.12)",
-                                                                                                    "belowLineFillColorGrowingBottom": "rgba(0, 255, 136, 0)",
-                                                                                                        "belowLineFillColorFallingBottom": "rgba(255, 0, 0, 0)",
-                                                                                                            "symbolActiveColor": "rgba(0, 255, 136, 0.12)",
-                                                                                                                "tabs": [
-                                                                                                                    {
-                                                                                                                        "title": "Indices",
-                                                                                                                        "symbols": [
-                                                                                                                            {
-                                                                                                                                "s": "FOREXCOM:SPXUSD",
-                                                                                                                                "d": "S&P 500"
-                                                                                                                            },
-                                                                                                                            {
-                                                                                                                                "s": "FOREXCOM:NSXUSD",
-                                                                                                                                "d": "Nasdaq 100"
-                                                                                                                            },
-                                                                                                                            {
-                                                                                                                                "s": "FOREXCOM:DJI",
-                                                                                                                                "d": "Dow 30"
-                                                                                                                            },
-                                                                                                                            {
-                                                                                                                                "s": "INDEX:NKY",
-                                                                                                                                "d": "Nikkei 225"
-                                                                                                                            },
-                                                                                                                            {
-                                                                                                                                "s": "INDEX:DEU40",
-                                                                                                                                "d": "DAX Index"
-                                                                                                                            },
-                                                                                                                            {
-                                                                                                                                "s": "FOREXCOM:UKXGBP",
-                                                                                                                                "d": "FTSE 100"
-                                                                                                                            }
-                                                                                                                        ],
-                                                                                                                        "originalTitle": "Indices"
-                                                                                                                    }
-                                                                                                                ]
-                                }
-                            </script>
+                    <div class="tradingview-widget-container" id="markets-overview-container">
+                        <div class="tradingview-widget-container__widget"></div>
                     </div>
                 </div>
             </div>
@@ -735,6 +681,101 @@
             'Artificial Analysis'
         );
 
+        // --- Global Markets (TradingView) ---
+        const MARKETS_OVERVIEW = {
+            colorTheme: 'dark',
+            dateRange: '12M',
+            showChart: true,
+            locale: 'en',
+            largeChartUrl: '',
+            isTransparent: true,
+            showSymbolLogo: true,
+            showFloatingTooltip: false,
+            width: '100%',
+            height: '100%',
+            plotLineColorGrowing: 'rgba(0, 255, 136, 1)',
+            plotLineColorFalling: 'rgba(255, 0, 0, 1)',
+            gridLineColor: 'rgba(240, 243, 250, 0)',
+            scaleFontColor: 'rgba(106, 109, 120, 1)',
+            belowLineFillColorGrowing: 'rgba(0, 255, 136, 0.12)',
+            belowLineFillColorFalling: 'rgba(255, 0, 0, 0.12)',
+            belowLineFillColorGrowingBottom: 'rgba(0, 255, 136, 0)',
+            belowLineFillColorFallingBottom: 'rgba(255, 0, 0, 0)',
+            symbolActiveColor: 'rgba(0, 255, 136, 0.12)',
+            tabs: [
+                {
+                    title: 'Indices',
+                    originalTitle: 'Indices',
+                    symbols: [
+                        { s: 'FOREXCOM:SPXUSD', d: 'S&P 500' },
+                        { s: 'FOREXCOM:NSXUSD', d: 'Nasdaq 100' },
+                        { s: 'FOREXCOM:DJI', d: 'Dow 30' },
+                        { s: 'INDEX:NKY', d: 'Nikkei 225' },
+                        { s: 'INDEX:DEU40', d: 'DAX Index' },
+                        { s: 'FOREXCOM:UKXGBP', d: 'FTSE 100' },
+                    ],
+                },
+                {
+                    title: 'Emerging Markets',
+                    originalTitle: 'Emerging Markets',
+                    symbols: [
+                        { s: 'INDEX:NIFTY', d: 'Nifty 50' },
+                        { s: 'BSE:SENSEX', d: 'Sensex' },
+                        { s: 'TVC:IBOV', d: 'Bovespa' },
+                        { s: 'INDEX:HSI', d: 'Hang Seng' },
+                        { s: 'SSE:000001', d: 'SSE Composite' },
+                        { s: 'INDEX:TWII', d: 'Taiwan Weighted' },
+                        { s: 'BMV:ME', d: 'S&P/BMV IPC' },
+                        { s: 'JSE:SA40', d: 'South Africa Top 40' },
+                    ],
+                },
+            ],
+        };
+
+        const MARKETS_ROW_PX = 38;
+        const MARKETS_CHART_PX = 200;
+        const MARKETS_CHROME_PX = 88;
+        const MARKETS_DEFAULT_GRID_ROW_PX = 300;
+
+        function marketsSymbolRowCount(tabs) {
+            return tabs.reduce(
+                (max, tab) => Math.max(max, tab.symbols?.length ?? 0),
+                0,
+            );
+        }
+
+        function marketsEmbedMinHeight(config) {
+            const rows = marketsSymbolRowCount(config.tabs);
+            const chart = config.showChart ? MARKETS_CHART_PX : 0;
+            return chart + MARKETS_CHROME_PX + rows * MARKETS_ROW_PX;
+        }
+
+        function applyGlobalMarketsLayout(config) {
+            const widget = document.getElementById('widget-indices');
+            if (!widget) {
+                return;
+            }
+            const embedMin = marketsEmbedMinHeight(config);
+            const doubledGrid = MARKETS_DEFAULT_GRID_ROW_PX * 2 + 20;
+            widget.style.minHeight = `${Math.max(doubledGrid, embedMin + 56)}px`;
+            widget.style.setProperty('--markets-embed-min-height', `${embedMin}px`);
+        }
+
+        function embedMarketsOverview(config) {
+            const container = document.getElementById('markets-overview-container');
+            if (!container) {
+                return;
+            }
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js';
+            script.async = true;
+            script.textContent = JSON.stringify(config);
+            container.appendChild(script);
+        }
+
+        applyGlobalMarketsLayout(MARKETS_OVERVIEW);
+        embedMarketsOverview(MARKETS_OVERVIEW);
 
     </script>
 </body>
