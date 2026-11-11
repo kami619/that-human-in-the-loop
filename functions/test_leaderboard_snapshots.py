@@ -35,7 +35,8 @@ class TestLeaderboardSnapshots(unittest.TestCase):
         data = self._load("artificial-analysis-leaderboard.json")
         self._assert_common_shape(data)
         version = data["meta"]["version"]
-        self.assertRegex(version, r"^\d+\.\d+$", msg=f"unexpected version format: {version}")
+        # The index is published as "4.3" or a bare major such as "5".
+        self.assertRegex(version, r"^\d+(\.\d+)?$", msg=f"unexpected version format: {version}")
         self.assertTrue(all("intelligence_index" in row for row in data["leaderboard"]))
 
 
