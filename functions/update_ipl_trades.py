@@ -4,11 +4,16 @@ from __future__ import annotations
 
 import datetime
 import json
+import os
 import re
+import sys
 import urllib.error
 import urllib.request
 from html import unescape
 from typing import Any
+
+sys.path.insert(0, os.path.dirname(__file__))
+from ipl_security import validate_snapshot, validate_trade_source_url
 
 IPL_BASE = "https://www.iplt20.com"
 NEWS_URL = f"{IPL_BASE}/news"
@@ -448,11 +453,12 @@ def build_trade_record(slug: str, meta: dict[str, str], ordinal: int) -> dict[st
 
     official_title = meta.get("title", "")
     headline = template.get("headline", official_title)
+    source_url = meta.get("url", f"{IPL_BASE}/news/article/{slug}")
     record = {
         "id": f"IPL27-{ordinal:02d}",
         **template,
         "headline": headline,
-        "sourceUrl": meta.get("url", f"{IPL_BASE}/news/article/{slug}"),
+        "sourceUrl": validate_trade_source_url(source_url),
         "officialTitle": official_title,
         "publishedAt": meta.get("publishedAt", ""),
     }
@@ -485,7 +491,7 @@ def build_snapshot(trade_slugs: list[str] | None = None) -> dict[str, Any]:
         trade["id"] = f"IPL27-{index:02d}"
 
     now = datetime.datetime.now(datetime.timezone.utc).astimezone()
-    return {
+    snapshot = {
         "snapshotDate": now.date().isoformat(),
         "fetchedAt": now.isoformat(),
         "seasonLabel": "IPL 2027 Trade Window",
@@ -496,6 +502,8 @@ def build_snapshot(trade_slugs: list[str] | None = None) -> dict[str, Any]:
         "milestones": MILESTONES,
         "trades": trades,
     }
+    validate_snapshot(snapshot)
+    return snapshot
 
 
 def write_snapshot(path: str = OUTPUT_FILE, trade_slugs: list[str] | None = None) -> dict[str, Any]:

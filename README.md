@@ -57,8 +57,12 @@ that-hitl/
 ├── theme.css                   # Shared CSS variables and scanline effect
 ├── deepswe-leaderboard.json    # DeepSWE v1.1 snapshot
 ├── artificial-analysis-leaderboard.json # Artificial Analysis snapshot
+├── security-utils.js           # Client URL / CSS gradient guards
+├── SECURITY.md                 # CSP, ETL validation, dependency audit
 ├── functions/
-│   ├── api/subscribe.js        # Cloudflare Worker (waitlist endpoint)
+│   ├── requirements.txt        # Pinned ETL dependencies (requests)
+│   ├── ipl_security.py         # IPL snapshot validation
+│   ├── api/subscribe.js        # (optional) Cloudflare Worker — not in tree; see SECURITY.md
 │   ├── update_bfcl_leaderboard.py  # Legacy BFCL ETL
 │   ├── test_update_bfcl.py     # Legacy BFCL ETL tests
 │   ├── update_model_leaderboards.py # DeepSWE + Artificial Analysis ETL

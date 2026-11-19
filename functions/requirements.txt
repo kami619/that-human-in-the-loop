@@ -1,0 +1,2 @@
+# Pinned for leaderboard ETL and CI security audit
+requests==2.32.5
