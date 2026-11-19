@@ -32,6 +32,6 @@ jobs:
       - name: Audit odh-sre-agent (informational)
         working-directory: odh-sre-agent
         run: |
-          pip install pip-audit uv
+          pip install uv
           uv sync
-          .venv/bin/pip-audit
+          uv run --with pip-audit pip-audit
