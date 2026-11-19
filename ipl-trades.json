@@ -1,0 +1,393 @@
+{
+  "snapshotDate": "2026-11-19",
+  "fetchedAt": "2026-11-19T11:13:58.362724+05:30",
+  "seasonLabel": "IPL 2027 Trade Window",
+  "status": "LIVE",
+  "source": "https://www.iplt20.com",
+  "discoveredSlugs": [
+    "csk-and-srh-agree-to-four-player-trade",
+    "hardik-pandya-and-arshdeep-singh-complete-major-trade-between-pbks-and-mi",
+    "harshal-patel-traded-to-gujarat-titans-from-sunrisers-hyderabad",
+    "mohd-shami-and-m-siddharth-traded-to-rajasthan-royals-sam-curran-traded-to-lucknow-super-giants",
+    "rishabh-pant-and-kuldeep-yadav-complete-high-profile-trade-between-dc-and-lsg",
+    "t-natarajan-returns-to-sunrisers-hyderabad-zeeshan-ansari-moves-to-delhi-capitals"
+  ],
+  "franchises": {
+    "CSK": {
+      "name": "Chennai Super Kings",
+      "color": "#F5C518",
+      "tint": "linear-gradient(145deg, rgba(245, 197, 24, 0.22) 0%, rgba(16, 19, 28, 0.95) 85%)"
+    },
+    "DC": {
+      "name": "Delhi Capitals",
+      "color": "#3B82F6",
+      "tint": "linear-gradient(145deg, rgba(59, 130, 246, 0.22) 0%, rgba(16, 19, 28, 0.95) 85%)"
+    },
+    "GT": {
+      "name": "Gujarat Titans",
+      "color": "#38BDF8",
+      "tint": "linear-gradient(145deg, rgba(56, 189, 248, 0.22) 0%, rgba(16, 19, 28, 0.95) 85%)"
+    },
+    "KKR": {
+      "name": "Kolkata Knight Riders",
+      "color": "#A855F7",
+      "tint": "linear-gradient(145deg, rgba(168, 85, 247, 0.24) 0%, rgba(16, 19, 28, 0.95) 85%)"
+    },
+    "LSG": {
+      "name": "Lucknow Super Giants",
+      "color": "#34D399",
+      "tint": "linear-gradient(145deg, rgba(52, 211, 153, 0.22) 0%, rgba(16, 19, 28, 0.95) 85%)"
+    },
+    "MI": {
+      "name": "Mumbai Indians",
+      "color": "#00F0FF",
+      "tint": "linear-gradient(145deg, rgba(0, 240, 255, 0.22) 0%, rgba(16, 19, 28, 0.95) 85%)"
+    },
+    "PBKS": {
+      "name": "Punjab Kings",
+      "color": "#EF4444",
+      "tint": "linear-gradient(145deg, rgba(239, 68, 68, 0.22) 0%, rgba(16, 19, 28, 0.95) 85%)"
+    },
+    "RR": {
+      "name": "Rajasthan Royals",
+      "color": "#F472B6",
+      "tint": "linear-gradient(145deg, rgba(244, 114, 182, 0.22) 0%, rgba(16, 19, 28, 0.95) 85%)"
+    },
+    "RCB": {
+      "name": "Royal Challengers Bengaluru",
+      "color": "#FF2A6D",
+      "tint": "linear-gradient(145deg, rgba(255, 42, 109, 0.24) 0%, rgba(16, 19, 28, 0.95) 85%)"
+    },
+    "SRH": {
+      "name": "Sunrisers Hyderabad",
+      "color": "#FB923C",
+      "tint": "linear-gradient(145deg, rgba(251, 146, 60, 0.22) 0%, rgba(16, 19, 28, 0.95) 85%)"
+    }
+  },
+  "milestones": [
+    {
+      "id": "trade-window-1-end",
+      "label": "Trade Window 1 Closes",
+      "at": "2026-12-09T23:59:59+05:30",
+      "detail": "7 days before mini-auction"
+    },
+    {
+      "id": "mini-auction-2027",
+      "label": "IPL 2027 Mini-Auction",
+      "at": "2026-12-16T11:00:00+05:30",
+      "detail": "Goa · 11:00 AM IST"
+    },
+    {
+      "id": "trade-window-2-start",
+      "label": "Trade Window 2 Opens",
+      "at": "2026-12-17T00:00:00+05:30",
+      "detail": "Post-auction trades resume"
+    },
+    {
+      "id": "trade-window-2-end",
+      "label": "Trade Window 2 Closes",
+      "at": "2027-02-12T23:59:59+05:30",
+      "detail": "~30 days before season"
+    },
+    {
+      "id": "ipl-2027-kickoff",
+      "label": "IPL 2027 Season",
+      "at": "2027-03-14T00:00:00+05:30",
+      "detail": "Mar 14 – May 30 window"
+    }
+  ],
+  "trades": [
+    {
+      "id": "IPL27-01",
+      "type": "SWAP",
+      "label": "Superstar Player Swap",
+      "headline": "Pant ⇄ Kuldeep High-Profile Exchange",
+      "amountCr": 14.25,
+      "purseNote": "Pant rejoins DC at ₹15 Cr • Kuldeep to LSG at ₹13.5 Cr",
+      "summary": "Rishabh Pant returns to Delhi Capitals from Lucknow Super Giants, while Kuldeep Yadav joins LSG — one of the most significant IPL trades in recent years.",
+      "left": {
+        "name": "Rishabh Pant",
+        "from": "LSG",
+        "to": "DC",
+        "role": "WK-Batter",
+        "rating": 96,
+        "pose": "batter"
+      },
+      "right": {
+        "name": "Kuldeep Yadav",
+        "from": "DC",
+        "to": "LSG",
+        "role": "Bowler",
+        "rating": 94,
+        "pose": "bowler"
+      },
+      "players": [
+        {
+          "name": "Rishabh Pant",
+          "from": "LSG",
+          "to": "DC",
+          "role": "WK-Batter",
+          "feeCr": 15.0,
+          "pose": "batter"
+        },
+        {
+          "name": "Kuldeep Yadav",
+          "from": "DC",
+          "to": "LSG",
+          "role": "Bowler",
+          "feeCr": 13.5,
+          "pose": "bowler"
+        }
+      ],
+      "sourceUrl": "https://www.iplt20.com/news/article/rishabh-pant-and-kuldeep-yadav-complete-high-profile-trade-between-dc-and-lsg",
+      "officialTitle": "Rishabh Pant and Kuldeep Yadav complete high-profile trade between DC and LSG",
+      "publishedAt": "2026-06-23T13:15:00+00:00"
+    },
+    {
+      "id": "IPL27-02",
+      "type": "SWAP",
+      "label": "Direct Player Swap",
+      "headline": "Natarajan Returns to SRH; Ansari to DC",
+      "amountCr": 5.0,
+      "purseNote": "Natarajan to SRH at ₹5 Cr • Ansari to DC at ₹0.40 Cr",
+      "summary": "T. Natarajan returns to Sunrisers Hyderabad from Delhi Capitals; leg-spinner Zeeshan Ansari moves to Delhi Capitals.",
+      "left": {
+        "name": "T. Natarajan",
+        "from": "DC",
+        "to": "SRH",
+        "role": "Bowler",
+        "rating": 88,
+        "pose": "bowler"
+      },
+      "right": {
+        "name": "Zeeshan Ansari",
+        "from": "SRH",
+        "to": "DC",
+        "role": "Bowler",
+        "rating": 82,
+        "pose": "bowler"
+      },
+      "players": [
+        {
+          "name": "T. Natarajan",
+          "from": "DC",
+          "to": "SRH",
+          "role": "Bowler",
+          "feeCr": 5.0,
+          "pose": "bowler"
+        },
+        {
+          "name": "Zeeshan Ansari",
+          "from": "SRH",
+          "to": "DC",
+          "role": "Bowler",
+          "feeCr": 0.4,
+          "pose": "bowler"
+        }
+      ],
+      "sourceUrl": "https://www.iplt20.com/news/article/t-natarajan-returns-to-sunrisers-hyderabad-zeeshan-ansari-moves-to-delhi-capitals",
+      "officialTitle": "T. Natarajan returns to Sunrisers Hyderabad; Zeeshan Ansari moves to Delhi Capitals",
+      "publishedAt": "2026-10-14T16:58:00+05:30"
+    },
+    {
+      "id": "IPL27-03",
+      "type": "SWAP",
+      "label": "Four-Player Blockbuster",
+      "headline": "CSK ⇄ SRH Four-Player Trade",
+      "amountCr": 9.0,
+      "purseNote": "Livingstone (₹6 Cr) + Edwards (₹3 Cr) • Khaleel (₹4.8 Cr) + Ellis (₹2 Cr)",
+      "summary": "Chennai Super Kings acquire Liam Livingstone and Jack Edwards from Sunrisers Hyderabad; Khaleel Ahmed and Nathan Ellis move to SRH.",
+      "left": {
+        "name": "Liam Livingstone (+ Jack Edwards)",
+        "from": "SRH",
+        "to": "CSK",
+        "role": "All-Rounder",
+        "rating": 93,
+        "pose": "allrounder"
+      },
+      "right": {
+        "name": "Khaleel Ahmed (+ Nathan Ellis)",
+        "from": "CSK",
+        "to": "SRH",
+        "role": "Bowler",
+        "rating": 88,
+        "pose": "bowler"
+      },
+      "players": [
+        {
+          "name": "Liam Livingstone",
+          "from": "SRH",
+          "to": "CSK",
+          "role": "All-Rounder",
+          "feeCr": 6.0,
+          "pose": "allrounder"
+        },
+        {
+          "name": "Jack Edwards",
+          "from": "SRH",
+          "to": "CSK",
+          "role": "All-Rounder",
+          "feeCr": 3.0,
+          "pose": "allrounder"
+        },
+        {
+          "name": "Khaleel Ahmed",
+          "from": "CSK",
+          "to": "SRH",
+          "role": "Bowler",
+          "feeCr": 4.8,
+          "pose": "bowler"
+        },
+        {
+          "name": "Nathan Ellis",
+          "from": "CSK",
+          "to": "SRH",
+          "role": "Bowler",
+          "feeCr": 2.0,
+          "pose": "bowler"
+        }
+      ],
+      "sourceUrl": "https://www.iplt20.com/news/article/csk-and-srh-agree-to-four-player-trade",
+      "officialTitle": "CSK and SRH agree to four-player trade",
+      "publishedAt": "2026-11-05T14:00:00+05:30"
+    },
+    {
+      "id": "IPL27-04",
+      "type": "SWAP",
+      "label": "Marquee Player Swap",
+      "headline": "Hardik ⇄ Arshdeep Blockbuster",
+      "amountCr": 18.0,
+      "purseNote": "Pandya to PBKS at ₹18 Cr • Arshdeep to MI at ₹18 Cr",
+      "summary": "Mumbai Indians captain Hardik Pandya joins Punjab Kings; Arshdeep Singh, PBKS' leading wicket-taker, moves to MI.",
+      "left": {
+        "name": "Hardik Pandya",
+        "from": "MI",
+        "to": "PBKS",
+        "role": "All-Rounder",
+        "rating": 94,
+        "pose": "allrounder"
+      },
+      "right": {
+        "name": "Arshdeep Singh",
+        "from": "PBKS",
+        "to": "MI",
+        "role": "Bowler",
+        "rating": 93,
+        "pose": "bowler"
+      },
+      "players": [
+        {
+          "name": "Hardik Pandya",
+          "from": "MI",
+          "to": "PBKS",
+          "role": "All-Rounder",
+          "feeCr": 18.0,
+          "pose": "allrounder"
+        },
+        {
+          "name": "Arshdeep Singh",
+          "from": "PBKS",
+          "to": "MI",
+          "role": "Bowler",
+          "feeCr": 18.0,
+          "pose": "bowler"
+        }
+      ],
+      "sourceUrl": "https://www.iplt20.com/news/article/hardik-pandya-and-arshdeep-singh-complete-major-trade-between-pbks-and-mi",
+      "officialTitle": "Hardik Pandya and Arshdeep Singh complete major trade between PBKS and MI",
+      "publishedAt": "2026-11-11T09:15:00+05:30"
+    },
+    {
+      "id": "IPL27-05",
+      "type": "CASH",
+      "label": "All-Cash Transfer",
+      "headline": "Harshal Patel to Gujarat Titans",
+      "amountCr": 4.0,
+      "purseNote": "GT acquire Patel at ₹4 Cr • SRH purse credit",
+      "summary": "Two-time Purple Cap winner Harshal Patel moves from Sunrisers Hyderabad to Gujarat Titans for a revised fee of ₹4 crore.",
+      "left": {
+        "name": "Harshal Patel",
+        "from": "SRH",
+        "to": "GT",
+        "role": "Bowler",
+        "rating": 91,
+        "pose": "bowler"
+      },
+      "right": {
+        "name": "Purse Credit",
+        "from": "GT",
+        "to": "SRH",
+        "role": "₹4.00 Cr Vault",
+        "rating": 89,
+        "pose": "vault"
+      },
+      "players": [
+        {
+          "name": "Harshal Patel",
+          "from": "SRH",
+          "to": "GT",
+          "role": "Bowler",
+          "feeCr": 4.0,
+          "pose": "bowler"
+        }
+      ],
+      "sourceUrl": "https://www.iplt20.com/news/article/harshal-patel-traded-to-gujarat-titans-from-sunrisers-hyderabad",
+      "officialTitle": "Harshal Patel traded to Gujarat Titans from Sunrisers Hyderabad",
+      "publishedAt": "2026-11-17T12:58:00+05:30"
+    },
+    {
+      "id": "IPL27-06",
+      "type": "SWAP",
+      "label": "Multi-Player Trade",
+      "headline": "Shami + Siddharth ⇄ Sam Curran",
+      "amountCr": 8.75,
+      "purseNote": "Shami (₹8 Cr) + Siddharth (₹0.75 Cr) to RR • Curran (₹2.4 Cr) to LSG",
+      "summary": "Mohammed Shami and M. Siddharth join Rajasthan Royals from LSG; Sam Curran moves to Lucknow Super Giants from RR.",
+      "left": {
+        "name": "Mohammed Shami (+ M. Siddharth)",
+        "from": "LSG",
+        "to": "RR",
+        "role": "Bowler",
+        "rating": 92,
+        "pose": "bowler"
+      },
+      "right": {
+        "name": "Sam Curran",
+        "from": "RR",
+        "to": "LSG",
+        "role": "All-Rounder",
+        "rating": 90,
+        "pose": "allrounder"
+      },
+      "players": [
+        {
+          "name": "Mohammed Shami",
+          "from": "LSG",
+          "to": "RR",
+          "role": "Bowler",
+          "feeCr": 8.0,
+          "pose": "bowler"
+        },
+        {
+          "name": "M. Siddharth",
+          "from": "LSG",
+          "to": "RR",
+          "role": "Bowler",
+          "feeCr": 0.75,
+          "pose": "bowler"
+        },
+        {
+          "name": "Sam Curran",
+          "from": "RR",
+          "to": "LSG",
+          "role": "All-Rounder",
+          "feeCr": 2.4,
+          "pose": "allrounder"
+        }
+      ],
+      "sourceUrl": "https://www.iplt20.com/news/article/mohd-shami-and-m-siddharth-traded-to-rajasthan-royals-sam-curran-traded-to-lucknow-super-giants",
+      "officialTitle": "Mohd Shami and M. Siddharth traded to Rajasthan Royals, Sam Curran traded to Lucknow Super Giants",
+      "publishedAt": "2026-11-17T15:30:00+05:30"
+    }
+  ]
+}

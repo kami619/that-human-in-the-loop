@@ -9,6 +9,7 @@ A static two-page dashboard with live data widgets, served with no build step.
 - **Landing page** (`index.html`) -- Animated header, chess board animation, rotating engineering quotes
 - **Dashboard** (`dashboard.html`) -- Weather, multi-timezone clocks, DeepSWE coding-agent leaderboard, Artificial Analysis Intelligence Index, TradingView markets, financial news, stellar explorer
 - **Solar system** (`solar-system.html`) -- 3D solar system visualization
+- **IPL Trade Terminal** (`ipl-trades.html`) -- Cyberpunk/WWE-style trade cards per franchise (`ipl-trades.json` snapshot)
 
 ### Run locally
 
@@ -16,6 +17,9 @@ A static two-page dashboard with live data widgets, served with no build step.
 python -m http.server 3000
 # or
 npx serve .
+
+# Refresh IPL trades from iplt20.com
+python functions/update_ipl_trades.py
 ```
 
 ### External data
@@ -48,6 +52,8 @@ that-hitl/
 ├── index.html                  # Landing page
 ├── dashboard.html              # Dashboard with model leaderboard widgets
 ├── solar-system.html           # 3D solar system
+├── ipl-trades.html             # IPL trade terminal (POC)
+├── ipl-trades.json             # IPL 2027 trade snapshot (official iplt20.com)
 ├── theme.css                   # Shared CSS variables and scanline effect
 ├── deepswe-leaderboard.json    # DeepSWE v1.1 snapshot
 ├── artificial-analysis-leaderboard.json # Artificial Analysis snapshot
