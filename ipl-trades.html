@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IPL // TRADE TERMINAL</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://cdn.tailwindcss.com; base-uri 'self'; form-action 'self';" />
   <link rel="stylesheet" href="theme.css" />
+  <script src="security-utils.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -565,14 +567,14 @@
             <span class="font-mono-clean font-bold text-[#00F0FF]">₹${trade.amountCr.toFixed(2)} CR</span>
           </div>
           <div class="match-stage">
-            <div class="corner-left p-3.5 flex flex-col justify-between" style="background:${fLeft.tint};">
+            <div class="corner-left p-3.5 flex flex-col justify-between" style="background:${safeGradientTint(fLeft.tint, '#10131C')};">
               <div class="flex items-center justify-between pr-10">
                 ${renderTeamTag(trade.left.to)}
                 <span class="font-mono-clean text-xs font-bold" style="color:${fLeft.color}">${trade.left.rating} OVR</span>
               </div>
               <div class="my-auto pr-8">${getMinimalAthleteSVG(trade.left.pose, fLeft.color, false)}</div>
             </div>
-            <div class="corner-right p-3.5 flex flex-col justify-between text-right" style="background:${fRight.tint};">
+            <div class="corner-right p-3.5 flex flex-col justify-between text-right" style="background:${safeGradientTint(fRight.tint, '#10131C')};">
               <div class="flex items-center justify-between pl-10">
                 <span class="font-mono-clean text-xs font-bold" style="color:${fRight.color}">${trade.right.rating} OVR</span>
                 ${renderTeamTag(trade.right.to)}
@@ -775,7 +777,7 @@
         ${buildPlayerRosterHtml(trade)}
         <p class="text-sm text-slate-300 leading-relaxed pt-1">${escapeHtml(trade.summary)}</p>
         ${trade.publishedAt ? `<p class="text-[11px] font-mono-clean text-slate-500">Advisory published: ${escapeHtml(trade.publishedAt)}</p>` : ''}
-        ${trade.sourceUrl ? `<a href="${escapeHtml(trade.sourceUrl)}" target="_blank" rel="noopener" class="inline-block text-xs font-mono-clean text-[#00F0FF] hover:underline pt-2">Official advisory ↗</a>` : ''}
+        ${(() => { const u = sanitizeHttpsUrl(trade.sourceUrl); return u ? `<a href="${escapeHtml(u)}" target="_blank" rel="noopener noreferrer" class="inline-block text-xs font-mono-clean text-[#00F0FF] hover:underline pt-2">Official advisory ↗</a>` : ''; })()}
       `;
 
       const modal = document.getElementById('inspectorModal');

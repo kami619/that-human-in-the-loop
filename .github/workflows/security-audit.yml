@@ -1,0 +1,37 @@
+name: Security audit
+
+on:
+  schedule:
+    - cron: '0 12 * * 1'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'functions/requirements.txt'
+      - 'odh-sre-agent/**'
+      - 'food-vlog-agent/**'
+
+jobs:
+  pip-audit-functions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit pinned dashboard ETL dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pip-audit
+          pip-audit -r functions/requirements.txt
+
+  pip-audit-odh-sre-agent:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Audit odh-sre-agent (informational)
+        working-directory: odh-sre-agent
+        run: |
+          pip install pip-audit uv
+          uv sync
+          uv run pip-audit
