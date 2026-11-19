@@ -34,4 +34,4 @@ jobs:
         run: |
           pip install pip-audit uv
           uv sync
-          uv run pip-audit
+          .venv/bin/pip-audit
