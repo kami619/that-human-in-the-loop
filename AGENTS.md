@@ -14,6 +14,8 @@ Monorepo with standalone projects. Sub-projects with their own `AGENTS.md` are l
 - No build step — pure HTML/CSS/JS
 - Shared CSS variables in `theme.css`, linked from both pages
 - Widget JS is inline within each HTML file (no bundler)
+- IPL trades: `ipl-trades.json` snapshot loaded by `ipl-trades.html` (Tailwind CDN on that page only)
+- IPL ETL: `python functions/update_ipl_trades.py` (pulls trade articles from iplt20.com/news)
 - BFCL: GitHub Actions daily cron pushes to `bfcl` branch
 
 ## Sub-projects

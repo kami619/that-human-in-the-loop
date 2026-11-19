@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IPL // TRADE TERMINAL</title>
+  <link rel="stylesheet" href="theme.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-obsidian: #090A0F;
+      --surface-card: #10131C;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --neon-cyan: #00F0FF;
+      --neon-magenta: #FF2A6D;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-obsidian);
+      color: #F1F5F9;
+      font-family: 'Space Grotesk', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+  body::after { z-index: 9998; }
+
+    .font-mono-clean { font-family: 'JetBrains Mono', monospace; }
+
+    .minimal-grid {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-color: var(--bg-obsidian);
+      background-image:
+        radial-gradient(circle at 80% 0%, rgba(0, 240, 255, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 15% 100%, rgba(255, 42, 109, 0.06) 0%, transparent 45%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+    }
+
+    .cyber-card {
+      position: relative;
+      background: var(--surface-card);
+      border: 1px solid var(--border-subtle);
+      clip-path: polygon(
+        14px 0%,
+        calc(100% - 14px) 0%,
+        100% 14px,
+        100% calc(100% - 14px),
+        calc(100% - 14px) 100%,
+        14px 100%,
+        0% calc(100% - 14px),
+        0% 14px
+      );
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .cyber-card:hover {
+      border-color: rgba(0, 240, 255, 0.35);
+      box-shadow: 0 18px 40px -15px rgba(0, 0, 0, 0.8), 0 0 24px rgba(0, 240, 255, 0.08);
+    }
+
+    .card-sheen {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 20;
+      background: linear-gradient(125deg, transparent 30%, rgba(255, 255, 255, 0.04) 50%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .cyber-card:hover .card-sheen { opacity: 1; }
+
+    .match-stage {
+      position: relative;
+      height: 224px;
+      overflow: hidden;
+      background: #0B0D14;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .corner-left {
+      position: absolute;
+      inset: 0;
+      clip-path: polygon(0 0, 56% 0, 44% 100%, 0% 100%);
+      transition: transform 0.35s ease;
+    }
+
+    .corner-right {
+      position: absolute;
+      inset: 0;
+      clip-path: polygon(56% 0, 100% 0, 100% 100%, 44% 100%);
+      transition: transform 0.35s ease;
+    }
+
+    .cyber-card:hover .corner-left { transform: translateX(-2px); }
+    .cyber-card:hover .corner-right { transform: translateX(2px); }
+
+    .diagonal-slash {
+      position: absolute;
+      top: -10%;
+      left: 50%;
+      width: 1.5px;
+      height: 120%;
+      background: linear-gradient(to bottom, transparent, var(--neon-cyan), var(--neon-magenta), transparent);
+      transform: translateX(-50%) rotate(13.5deg);
+      z-index: 15;
+    }
+
+    .vs-badge {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      background: #090A0F;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      padding: 6px 10px;
+      clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.85);
+    }
+
+    .btn-chamfer {
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+      transition: all 0.2s ease;
+    }
+
+    .back-link {
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--neon-cyan); }
+
+    #loadError {
+      display: none;
+    }
+    #loadError.visible {
+      display: block;
+    }
+
+    .milestone-track {
+      display: flex;
+      gap: 0.75rem;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+      scrollbar-width: thin;
+    }
+
+    .milestone-card {
+      flex: 0 0 auto;
+      min-width: 168px;
+      background: #10131C;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.75rem 0.9rem;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    }
+
+    .milestone-card.is-next {
+      border-color: rgba(0, 240, 255, 0.45);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.08);
+    }
+
+    .milestone-card.is-past {
+      opacity: 0.55;
+    }
+
+    .countdown-digits {
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.05em;
+    }
+
+    .player-roster {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .player-roster table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.75rem;
+    }
+
+    .player-roster th {
+      text-align: left;
+      font-family: 'JetBrains Mono', monospace;
+      color: #94a3b8;
+      font-weight: 500;
+      padding: 0.5rem 0.65rem;
+      background: #0D1018;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .player-roster td {
+      padding: 0.55rem 0.65rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      vertical-align: middle;
+    }
+
+    .player-roster tr:last-child td {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body class="selection:bg-[#00F0FF] selection:text-[#090A0F]">
+  <div class="minimal-grid"></div>
+
+  <header class="sticky top-0 z-40 bg-[#090A0F]/85 backdrop-blur-md border-b border-white/[0.07]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <a href="dashboard.html" class="back-link shrink-0 hidden sm:inline">&larr; Dashboard</a>
+        <div class="w-8 h-8 bg-[#10131C] border border-[#00F0FF]/50 flex items-center justify-center btn-chamfer shrink-0">
+          <span class="w-2.5 h-2.5 bg-[#00F0FF] rotate-45"></span>
+        </div>
+        <div class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2.5 min-w-0">
+          <h1 class="text-base sm:text-xl font-bold tracking-tight text-white truncate">IPL TRADE MATRIX</h1>
+          <span id="statusBadge" class="text-[10px] sm:text-[11px] font-mono-clean text-[#00F0FF] bg-[#00F0FF]/10 px-2 py-0.5 rounded w-fit">
+            LOADING…
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div class="hidden md:flex bg-[#10131C] border border-white/[0.08] p-1 rounded-md items-center text-xs font-mono-clean" role="group" aria-label="View Mode">
+          <button id="viewSplitBtn" type="button" onclick="setViewMode('split')" class="px-2.5 py-1 rounded bg-white text-[#090A0F] font-bold transition">Split</button>
+          <button id="viewClashBtn" type="button" onclick="setViewMode('clash')" class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition">Clash</button>
+          <button id="viewPurseBtn" type="button" onclick="setViewMode('purse')" class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition">Purse</button>
+        </div>
+        <button type="button" onclick="openSimulator()" class="px-2.5 sm:px-3.5 py-1.5 bg-[#00F0FF] hover:bg-[#33F3FF] text-[#090A0F] text-[10px] sm:text-xs font-bold tracking-wide btn-chamfer">
+          + Simulate
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <p id="loadError" class="cyber-card p-4 text-sm font-mono-clean text-red-300 border-red-500/30">
+      Could not load <code class="text-[#00F0FF]">ipl-trades.json</code>. Serve the repo root (e.g. <code>python -m http.server 3000</code>).
+    </p>
+
+    <section id="milestoneSection" class="space-y-2 hidden">
+      <div class="flex items-center justify-between gap-2">
+        <h2 class="text-xs font-mono-clean text-slate-400 uppercase tracking-widest">Mission Clock</h2>
+        <span class="text-[10px] font-mono-clean text-slate-600">All times IST</span>
+      </div>
+      <div id="milestoneTrack" class="milestone-track"></div>
+    </section>
+
+    <section id="filterSection" class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.07] hidden">
+      <div id="teamPills" class="flex flex-wrap items-center gap-1.5"></div>
+      <div class="flex items-center gap-3 text-xs font-mono-clean">
+        <select id="typeSelect" onchange="setTypeFilter(this.value)" class="bg-[#10131C] border border-white/[0.1] text-slate-300 px-3 py-1.5 rounded outline-none focus:border-[#00F0FF]">
+          <option value="ALL">All Deal Types</option>
+          <option value="SWAP">Player Swaps</option>
+          <option value="CASH">All-Cash Transfers</option>
+        </select>
+        <span id="dealCount" class="text-slate-500">0 DEALS</span>
+        <span id="snapshotMeta" class="text-slate-600 hidden sm:inline"></span>
+      </div>
+    </section>
+
+    <section id="tradesContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></section>
+  </main>
+
+  <div id="inspectorModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4" onclick="if(event.target === this) closeInspector()">
+    <div class="bg-[#0E111A] border border-white/15 max-w-2xl w-full p-6 cyber-card shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-start justify-between gap-4 border-b border-white/[0.08] pb-4">
+        <div>
+          <span id="modalTag" class="text-[11px] font-mono-clean text-[#00F0FF] uppercase tracking-wider">DEAL TELEMETRY</span>
+          <h2 id="modalHeadline" class="text-xl font-bold text-white mt-0.5">Trade Summary</h2>
+        </div>
+        <button type="button" onclick="closeInspector()" class="text-slate-400 hover:text-white font-mono-clean text-xs px-2.5 py-1 border border-white/10 rounded">ESC</button>
+      </div>
+      <div id="modalContent" class="space-y-4"></div>
+    </div>
+  </div>
+
+  <div id="simulatorModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4" onclick="if(event.target === this) closeSimulator()">
+    <div class="bg-[#0E111A] border border-white/15 max-w-lg w-full p-6 cyber-card shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-white/[0.08] pb-3.5 mb-5">
+        <h2 class="text-lg font-bold text-white">Simulate IPL Trade</h2>
+        <button type="button" onclick="closeSimulator()" class="text-slate-400 hover:text-white font-mono-clean text-xs px-2 py-1">✕</button>
+      </div>
+      <form onsubmit="submitSimulatedTrade(event)" class="space-y-4 text-sm">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-mono-clean text-slate-400 mb-1">Deal Structure</label>
+            <select id="simStructure" onchange="updateSimFormLabels()" class="w-full bg-[#151925] border border-white/10 px-3 py-2 rounded text-white outline-none focus:border-[#00F0FF]">
+              <option value="SWAP">Player Swap</option>
+              <option value="CASH">All-Cash Deal</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-mono-clean text-slate-400 mb-1">Valuation (₹ Cr)</label>
+            <input id="simValuation" type="number" step="0.25" min="1" max="30" value="16.00" required class="w-full bg-[#151925] border border-white/10 px-3 py-2 rounded text-white outline-none focus:border-[#00F0FF]" />
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="bg-[#121622] p-3.5 rounded border border-white/[0.06] space-y-2.5">
+            <div class="text-xs font-mono-clean text-[#00F0FF]">INCOMING ASSET</div>
+            <input id="simPlayer1" type="text" value="Suryakumar Yadav" required class="w-full bg-[#0B0D14] border border-white/10 px-2.5 py-1.5 rounded text-xs text-white" placeholder="Player Name" />
+            <div class="grid grid-cols-2 gap-2">
+              <select id="simTeam1" class="bg-[#0B0D14] border border-white/10 px-2 py-1.5 rounded text-xs text-white"></select>
+              <select id="simRole1" class="bg-[#0B0D14] border border-white/10 px-2 py-1.5 rounded text-xs text-white">
+                <option value="Batter">Batter</option>
+                <option value="All-Rounder">All-Rounder</option>
+                <option value="Bowler">Bowler</option>
+                <option value="WK-Batter">WK-Batter</option>
+              </select>
+            </div>
+          </div>
+          <div class="bg-[#121622] p-3.5 rounded border border-white/[0.06] space-y-2.5">
+            <div id="simRightHeader" class="text-xs font-mono-clean text-[#FF2A6D]">COUNTER ASSET</div>
+            <input id="simPlayer2" type="text" value="Ruturaj Gaikwad" required class="w-full bg-[#0B0D14] border border-white/10 px-2.5 py-1.5 rounded text-xs text-white" placeholder="Player Name" />
+            <div class="grid grid-cols-2 gap-2">
+              <select id="simTeam2" class="bg-[#0B0D14] border border-white/10 px-2 py-1.5 rounded text-xs text-white"></select>
+              <select id="simRole2" class="bg-[#0B0D14] border border-white/10 px-2 py-1.5 rounded text-xs text-white">
+                <option value="Batter">Batter</option>
+                <option value="All-Rounder">All-Rounder</option>
+                <option value="Bowler">Bowler</option>
+                <option value="WK-Batter">WK-Batter</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <p class="text-[11px] font-mono-clean text-slate-500">Simulated deals exist only in this session (not saved to JSON).</p>
+        <button type="submit" class="w-full py-2.5 bg-[#00F0FF] hover:bg-[#33F3FF] text-[#090A0F] font-bold text-xs tracking-wider uppercase btn-chamfer">Publish Trade Card</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const TEAM_CODES = ['CSK', 'DC', 'GT', 'KKR', 'LSG', 'MI', 'PBKS', 'RR', 'RCB', 'SRH'];
+
+    let FRANCHISES = {};
+    let trades = [];
+    let milestones = [];
+    let tradeIdCounter = 100;
+    let milestoneTimer = null;
+    let meta = { snapshotDate: '', seasonLabel: '', status: 'POC' };
+
+    const appState = {
+      viewMode: 'split',
+      teamFilter: 'ALL',
+      typeFilter: 'ALL',
+      cardFlips: {}
+    };
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function formatFeeCr(feeCr) {
+      if (feeCr == null || Number.isNaN(feeCr)) return '—';
+      if (feeCr < 1) return `₹${(feeCr * 100).toFixed(0)} L`;
+      return `₹${Number(feeCr).toFixed(2).replace(/\.00$/, '')} Cr`;
+    }
+
+    function tradePlayers(trade) {
+      if (trade.players && trade.players.length) return trade.players;
+      const out = [];
+      if (trade.left && trade.left.name && !/purse credit/i.test(trade.left.name)) {
+        out.push({
+          name: trade.left.name,
+          from: trade.left.from,
+          to: trade.left.to,
+          role: trade.left.role,
+          feeCr: trade.amountCr,
+        });
+      }
+      if (trade.right && trade.right.name && !/purse credit/i.test(trade.right.name)) {
+        out.push({
+          name: trade.right.name,
+          from: trade.right.from,
+          to: trade.right.to,
+          role: trade.right.role,
+          feeCr: trade.amountCr,
+        });
+      }
+      return out;
+    }
+
+    function buildPlayerRosterHtml(trade) {
+      const players = tradePlayers(trade);
+      if (!players.length) return '';
+
+      const rows = players.map(p => `
+        <tr>
+          <td class="font-medium text-white">${escapeHtml(p.name)}</td>
+          <td class="font-mono-clean text-slate-300">${escapeHtml(p.from)} → ${escapeHtml(p.to)}</td>
+          <td class="text-slate-400">${escapeHtml(p.role || '—')}</td>
+          <td class="font-mono-clean text-[#00F0FF] text-right">${formatFeeCr(p.feeCr)}</td>
+        </tr>
+      `).join('');
+
+      return `
+        <div class="player-roster">
+          <div class="px-3 py-2 bg-[#0D1018] border-b border-white/[0.06]">
+            <span class="text-[11px] font-mono-clean text-slate-400 uppercase tracking-wider">Per-Player Transfer Manifest</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Route</th>
+                <th>Role</th>
+                <th class="text-right">Fee</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function formatCountdown(ms) {
+      if (ms <= 0) return { label: 'ELAPSED', past: true };
+      const totalSec = Math.floor(ms / 1000);
+      const days = Math.floor(totalSec / 86400);
+      const hours = Math.floor((totalSec % 86400) / 3600);
+      const mins = Math.floor((totalSec % 3600) / 60);
+      const secs = totalSec % 60;
+      const label = `${String(days).padStart(2, '0')}d ${String(hours).padStart(2, '0')}h ${String(mins).padStart(2, '0')}m ${String(secs).padStart(2, '0')}s`;
+      return { label, past: false };
+    }
+
+    function renderMilestones() {
+      const track = document.getElementById('milestoneTrack');
+      if (!track || !milestones.length) return;
+
+      const now = Date.now();
+      let nextId = null;
+      for (const m of milestones) {
+        const target = new Date(m.at).getTime();
+        if (target > now) {
+          nextId = m.id;
+          break;
+        }
+      }
+
+      track.innerHTML = milestones.map(m => {
+        const target = new Date(m.at).getTime();
+        const diff = target - now;
+        const { label, past } = formatCountdown(diff);
+        const isNext = m.id === nextId;
+        const stateClass = past ? 'is-past' : (isNext ? 'is-next' : '');
+        const display = past ? 'COMPLETE' : (isNext ? label : label);
+
+        return `
+          <article class="milestone-card ${stateClass}" data-milestone="${escapeHtml(m.id)}">
+            <div class="text-[10px] font-mono-clean text-slate-500 uppercase tracking-wide truncate">${escapeHtml(m.label)}</div>
+            <div class="countdown-digits text-sm font-bold text-white mt-1">${display}</div>
+            ${m.detail ? `<div class="text-[10px] text-slate-500 mt-1 font-mono-clean">${escapeHtml(m.detail)}</div>` : ''}
+          </article>
+        `;
+      }).join('');
+    }
+
+    function startMilestoneClock() {
+      if (milestoneTimer) clearInterval(milestoneTimer);
+      renderMilestones();
+      if (!milestones.length) return;
+      milestoneTimer = setInterval(renderMilestones, 1000);
+    }
+
+    function getMinimalAthleteSVG(pose, accentColor, isRight = false) {
+      const mirror = isRight ? 'transform="scale(-1,1) translate(-140,0)"' : '';
+
+      if (pose === 'vault') {
+        return `
+          <svg viewBox="0 0 140 150" class="w-32 h-36 mx-auto" aria-hidden="true">
+            <polygon points="70,18 118,45 118,105 70,132 22,105 22,45" fill="rgba(9,10,15,0.75)" stroke="${accentColor}" stroke-width="1.5"/>
+            <polygon points="70,30 107,51 107,99 70,120 33,99 33,51" fill="none" stroke="${accentColor}" stroke-width="0.75" stroke-opacity="0.45"/>
+            <text x="70" y="84" text-anchor="middle" fill="${accentColor}" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="30">₹</text>
+          </svg>
+        `;
+      }
+
+      if (pose === 'bowler') {
+        return `
+          <svg viewBox="0 0 140 150" class="w-32 h-36 mx-auto" aria-hidden="true">
+            <g ${mirror}>
+              <circle cx="70" cy="75" r="52" fill="none" stroke="${accentColor}" stroke-width="0.75" stroke-opacity="0.25"/>
+              <path d="M63 26 h14 l3 15 h-20 z" fill="#121622" stroke="${accentColor}" stroke-width="1.5"/>
+              <rect x="70" y="31" width="11" height="4" fill="${accentColor}"/>
+              <path d="M56 45 h26 l5 38 h-34 z" fill="#121622" stroke="${accentColor}" stroke-width="1.5"/>
+              <path d="M80 47 L106 22 L111 27 L85 55 Z" fill="#121622" stroke="${accentColor}" stroke-width="1.5"/>
+              <circle cx="111" cy="21" r="4.5" fill="${accentColor}"/>
+              <path d="M56 83 L42 132 L52 132 L66 88 Z" fill="#0D1018" stroke="${accentColor}" stroke-width="1.5"/>
+              <path d="M72 83 L94 132 L84 132 L66 88 Z" fill="#0D1018" stroke="${accentColor}" stroke-width="1.5"/>
+            </g>
+          </svg>
+        `;
+      }
+
+      if (pose === 'allrounder') {
+        return `
+          <svg viewBox="0 0 140 150" class="w-32 h-36 mx-auto" aria-hidden="true">
+            <g ${mirror}>
+              <polygon points="70,18 118,46 118,110 70,138 22,110 22,46" fill="none" stroke="${accentColor}" stroke-width="0.75" stroke-opacity="0.25"/>
+              <path d="M62 24 h16 l3 16 h-22 z" fill="#121622" stroke="${accentColor}" stroke-width="1.5"/>
+              <rect x="70" y="30" width="12" height="4" fill="${accentColor}"/>
+              <path d="M50 44 h40 l-5 40 h-30 z" fill="#121622" stroke="${accentColor}" stroke-width="1.5"/>
+              <path d="M84 62 L116 26 L122 31 L90 68 Z" fill="${accentColor}"/>
+              <path d="M55 84 L48 132 L59 132 L66 88 Z" fill="#0D1018" stroke="${accentColor}" stroke-width="1.5"/>
+              <path d="M74 84 L83 132 L93 132 L84 88 Z" fill="#0D1018" stroke="${accentColor}" stroke-width="1.5"/>
+            </g>
+          </svg>
+        `;
+      }
+
+      return `
+        <svg viewBox="0 0 140 150" class="w-32 h-36 mx-auto" aria-hidden="true">
+          <g ${mirror}>
+            <path d="M35 32 Q 95 14 118 82" fill="none" stroke="${accentColor}" stroke-width="1" stroke-dasharray="4 4" stroke-opacity="0.45"/>
+            <path d="M62 25 h16 l3 16 h-22 z" fill="#121622" stroke="${accentColor}" stroke-width="1.5"/>
+            <rect x="70" y="31" width="12" height="4" fill="${accentColor}"/>
+            <path d="M54 45 h30 l-4 40 h-22 z" fill="#121622" stroke="${accentColor}" stroke-width="1.5"/>
+            <path d="M50 50 L26 20 L33 15 L57 45 Z" fill="${accentColor}"/>
+            <path d="M56 85 L46 132 L57 132 L66 89 Z" fill="#0D1018" stroke="${accentColor}" stroke-width="1.5"/>
+            <path d="M72 85 L85 132 L95 132 L82 89 Z" fill="#0D1018" stroke="${accentColor}" stroke-width="1.5"/>
+          </g>
+        </svg>
+      `;
+    }
+
+    function renderTeamTag(code) {
+      const f = FRANCHISES[code] || { color: '#00F0FF' };
+      const color = f.color;
+      return `
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-[11px] font-mono-clean font-bold rounded-sm border"
+              style="color:${color}; border-color:${color}40; background:${color}14;">
+          <span class="w-1.5 h-1.5 rounded-full" style="background:${color}"></span>
+          ${escapeHtml(code)}
+        </span>
+      `;
+    }
+
+    function buildClashCard(trade, interactive = true) {
+      const fLeft = FRANCHISES[trade.left.to] || FRANCHISES.MI;
+      const fRight = FRANCHISES[trade.right.to] || FRANCHISES.CSK;
+      const click = interactive ? `onclick="openInspector('${escapeHtml(trade.id)}')"` : '';
+      const tilt = interactive ? 'onmousemove="tiltCard(event, this)" onmouseleave="resetTilt(this)"' : '';
+
+      return `
+        <div class="cyber-card cursor-pointer flex flex-col justify-between" ${click} ${tilt}>
+          <div class="card-sheen"></div>
+          <div class="px-4 py-2.5 bg-[#0D1018] border-b border-white/[0.07] flex items-center justify-between text-xs">
+            <span class="font-mono-clean text-slate-400 uppercase tracking-wider text-[11px]">${escapeHtml(trade.label)}</span>
+            <span class="font-mono-clean font-bold text-[#00F0FF]">₹${trade.amountCr.toFixed(2)} CR</span>
+          </div>
+          <div class="match-stage">
+            <div class="corner-left p-3.5 flex flex-col justify-between" style="background:${fLeft.tint};">
+              <div class="flex items-center justify-between pr-10">
+                ${renderTeamTag(trade.left.to)}
+                <span class="font-mono-clean text-xs font-bold" style="color:${fLeft.color}">${trade.left.rating} OVR</span>
+              </div>
+              <div class="my-auto pr-8">${getMinimalAthleteSVG(trade.left.pose, fLeft.color, false)}</div>
+            </div>
+            <div class="corner-right p-3.5 flex flex-col justify-between text-right" style="background:${fRight.tint};">
+              <div class="flex items-center justify-between pl-10">
+                <span class="font-mono-clean text-xs font-bold" style="color:${fRight.color}">${trade.right.rating} OVR</span>
+                ${renderTeamTag(trade.right.to)}
+              </div>
+              <div class="my-auto pl-8">${getMinimalAthleteSVG(trade.right.pose, fRight.color, true)}</div>
+            </div>
+            <div class="diagonal-slash"></div>
+            <div class="vs-badge">
+              <span class="font-mono-clean font-bold text-xs tracking-widest text-white">${trade.type === 'SWAP' ? 'VS' : '➔'}</span>
+            </div>
+          </div>
+          <div class="p-4 grid grid-cols-2 gap-4 items-center bg-[#10131C]">
+            <div>
+              <div class="text-[11px] font-mono-clean text-slate-400">
+                ${escapeHtml(trade.left.from)} ➔ <span style="color:${fLeft.color}">${escapeHtml(trade.left.to)}</span> • ${escapeHtml(trade.left.role)}
+              </div>
+              <div class="font-bold text-base text-white truncate mt-0.5">${escapeHtml(trade.left.name)}</div>
+            </div>
+            <div class="text-right">
+              <div class="text-[11px] font-mono-clean text-slate-400">
+                ${escapeHtml(trade.right.from)} ➔ <span style="color:${fRight.color}">${escapeHtml(trade.right.to)}</span> • ${escapeHtml(trade.right.role)}
+              </div>
+              <div class="font-bold text-base text-white truncate mt-0.5">${escapeHtml(trade.right.name)}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function buildPurseCard(trade, interactive = true) {
+      const capLoad = Math.min(100, Math.round((trade.amountCr / 25) * 100));
+      const click = interactive ? `onclick="openInspector('${escapeHtml(trade.id)}')"` : '';
+      const tilt = interactive ? 'onmousemove="tiltCard(event, this)" onmouseleave="resetTilt(this)"' : '';
+
+      return `
+        <div class="cyber-card cursor-pointer flex flex-col justify-between bg-[#10131C]" ${click} ${tilt}>
+          <div class="card-sheen"></div>
+          <div class="px-4 py-2.5 bg-[#0D1018] border-b border-white/[0.07] flex items-center justify-between text-xs font-mono-clean">
+            <span class="text-slate-400 text-[11px] uppercase tracking-wider">PURSE VALUATION</span>
+            <span class="text-emerald-400 text-[11px]">CAP VERIFIED</span>
+          </div>
+          <div class="p-5 flex-1 flex flex-col items-center justify-center text-center space-y-4">
+            <div>
+              <div class="text-[11px] font-mono-clean text-slate-400 uppercase tracking-widest">Transfer Valuation</div>
+              <div class="text-3xl font-bold text-white tracking-tight mt-1">
+                ₹${trade.amountCr.toFixed(2)} <span class="text-base font-mono-clean text-[#00F0FF]">CR</span>
+              </div>
+            </div>
+            <div class="w-full flex items-center justify-between bg-[#0B0D14] border border-white/[0.06] px-3.5 py-2.5 rounded">
+              <div class="text-left">
+                <div class="text-[10px] font-mono-clean text-slate-500">OUTFLOW</div>
+                <div class="mt-0.5">${renderTeamTag(trade.left.to)}</div>
+              </div>
+              <span class="font-mono-clean text-xs text-slate-400">➔</span>
+              <div class="text-right">
+                <div class="text-[10px] font-mono-clean text-slate-500">INFLOW</div>
+                <div class="mt-0.5">${renderTeamTag(trade.left.from)}</div>
+              </div>
+            </div>
+          </div>
+          <div class="p-4 border-t border-white/[0.07] bg-[#0D1018] space-y-2">
+            <div class="flex items-center justify-between text-[11px] font-mono-clean">
+              <span class="text-slate-400">PURSE TIER SHARE</span>
+              <span class="text-white font-bold">${capLoad}%</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-[#00F0FF] to-[#FF2A6D]" style="width:${capLoad}%"></div>
+            </div>
+            <div class="text-[11px] font-mono-clean text-slate-400 truncate">${escapeHtml(trade.purseNote)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function tradeMatchesFilters(t) {
+      const typeOk = appState.typeFilter === 'ALL' || t.type === appState.typeFilter;
+      const team = appState.teamFilter;
+      const teamOk =
+        team === 'ALL' ||
+        t.left.from === team ||
+        t.left.to === team ||
+        t.right.from === team ||
+        t.right.to === team;
+      return typeOk && teamOk;
+    }
+
+    function renderFeed() {
+      const container = document.getElementById('tradesContainer');
+      const filtered = trades.filter(tradeMatchesFilters);
+
+      document.getElementById('dealCount').textContent = `${filtered.length} DEAL${filtered.length === 1 ? '' : 'S'}`;
+
+      if (!filtered.length) {
+        container.innerHTML = `
+          <div class="col-span-full cyber-card p-10 text-center space-y-2">
+            <p class="text-base font-bold text-white">No matching trades found</p>
+            <p class="text-xs font-mono-clean text-slate-400">Clear filters or simulate a new deal.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.className = appState.viewMode === 'split'
+        ? 'grid grid-cols-1 gap-6'
+        : 'grid grid-cols-1 md:grid-cols-2 gap-6';
+
+      container.innerHTML = filtered.map(trade => {
+        const id = escapeHtml(trade.id);
+        const headline = escapeHtml(trade.headline);
+
+        if (appState.viewMode === 'split') {
+          return `
+            <div class="bg-[#0D1018]/60 border border-white/[0.06] p-4 rounded-lg space-y-3">
+              <div class="flex items-center justify-between gap-2">
+                <h2 class="text-sm font-bold text-white tracking-tight">${headline}</h2>
+                <button type="button" onclick="openInspector('${id}')" class="text-xs font-mono-clean text-slate-400 hover:text-[#00F0FF] transition shrink-0">Details ➔</button>
+              </div>
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+                <div class="lg:col-span-7">${buildClashCard(trade, false)}</div>
+                <div class="lg:col-span-5">${buildPurseCard(trade, false)}</div>
+              </div>
+            </div>
+          `;
+        }
+
+        const defaultMode = appState.viewMode === 'purse' ? 'purse' : 'clash';
+        const activeFace = appState.cardFlips[trade.id] || defaultMode;
+
+        return `
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between px-1 gap-2">
+              <h2 class="text-sm font-bold text-white truncate">${headline}</h2>
+              <button type="button" onclick="flipCard('${id}')" class="text-[11px] font-mono-clean text-[#00F0FF] hover:underline shrink-0">
+                Show ${activeFace === 'clash' ? 'Purse' : 'Clash'} ⇄
+              </button>
+            </div>
+            ${activeFace === 'clash' ? buildClashCard(trade) : buildPurseCard(trade)}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setViewMode(mode) {
+      appState.viewMode = mode;
+      appState.cardFlips = {};
+      ['split', 'clash', 'purse'].forEach(m => {
+        const btn = document.getElementById(`view${m.charAt(0).toUpperCase() + m.slice(1)}Btn`);
+        if (!btn) return;
+        btn.className = m === mode
+          ? 'px-2.5 py-1 rounded bg-white text-[#090A0F] font-bold transition'
+          : 'px-2.5 py-1 rounded text-slate-400 hover:text-white transition';
+      });
+      renderFeed();
+    }
+
+    function flipCard(id) {
+      const base = appState.viewMode === 'purse' ? 'purse' : 'clash';
+      const current = appState.cardFlips[id] || base;
+      appState.cardFlips[id] = current === 'clash' ? 'purse' : 'clash';
+      renderFeed();
+    }
+
+    function setTeamFilter(team) {
+      appState.teamFilter = team;
+      document.querySelectorAll('.team-pill').forEach(pill => {
+        pill.className = pill.dataset.team === team
+          ? 'team-pill px-3 py-1 text-xs font-mono-clean font-bold rounded bg-white text-[#090A0F] transition'
+          : 'team-pill px-3 py-1 text-xs font-mono-clean rounded bg-[#10131C] text-slate-400 border border-white/[0.07] hover:text-white transition';
+      });
+      renderFeed();
+    }
+
+    function setTypeFilter(type) {
+      appState.typeFilter = type;
+      renderFeed();
+    }
+
+    function tiltCard(e, el) {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `perspective(1000px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg)`;
+    }
+
+    function resetTilt(el) {
+      el.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg)';
+    }
+
+    function openInspector(id) {
+      const trade = trades.find(t => t.id === id);
+      if (!trade) return;
+
+      document.getElementById('modalTag').textContent = `${trade.id} • ${trade.label}`;
+      document.getElementById('modalHeadline').textContent = trade.headline;
+      document.getElementById('modalContent').innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          ${buildClashCard(trade, false)}
+          ${buildPurseCard(trade, false)}
+        </div>
+        ${buildPlayerRosterHtml(trade)}
+        <p class="text-sm text-slate-300 leading-relaxed pt-1">${escapeHtml(trade.summary)}</p>
+        ${trade.publishedAt ? `<p class="text-[11px] font-mono-clean text-slate-500">Advisory published: ${escapeHtml(trade.publishedAt)}</p>` : ''}
+        ${trade.sourceUrl ? `<a href="${escapeHtml(trade.sourceUrl)}" target="_blank" rel="noopener" class="inline-block text-xs font-mono-clean text-[#00F0FF] hover:underline pt-2">Official advisory ↗</a>` : ''}
+      `;
+
+      const modal = document.getElementById('inspectorModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeInspector() {
+      const modal = document.getElementById('inspectorModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function openSimulator() {
+      const modal = document.getElementById('simulatorModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeSimulator() {
+      const modal = document.getElementById('simulatorModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function fillTeamSelects() {
+      const opts = TEAM_CODES.map(c => `<option value="${c}">${c}</option>`).join('');
+      document.getElementById('simTeam1').innerHTML = opts;
+      document.getElementById('simTeam2').innerHTML = opts;
+      document.getElementById('simTeam1').value = 'MI';
+      document.getElementById('simTeam2').value = 'CSK';
+    }
+
+    function renderTeamPills() {
+      const pills = ['ALL', ...TEAM_CODES].map(code => {
+        const cls = (code === 'ALL' && appState.teamFilter === 'ALL') || code === appState.teamFilter
+          ? 'team-pill px-3 py-1 text-xs font-mono-clean font-bold rounded bg-white text-[#090A0F] transition'
+          : 'team-pill px-3 py-1 text-xs font-mono-clean rounded bg-[#10131C] text-slate-400 border border-white/[0.07] hover:text-white transition';
+        return `<button type="button" onclick="setTeamFilter('${code}')" data-team="${code}" class="${cls}">${code}</button>`;
+      }).join('');
+      document.getElementById('teamPills').innerHTML = pills;
+    }
+
+    function updateSimFormLabels() {
+      const structure = document.getElementById('simStructure').value;
+      const header = document.getElementById('simRightHeader');
+      const input2 = document.getElementById('simPlayer2');
+      if (structure === 'CASH') {
+        header.textContent = 'PURSE ALLOCATION';
+        input2.value = 'Purse Credit';
+      } else {
+        header.textContent = 'COUNTER ASSET';
+        input2.value = 'Ruturaj Gaikwad';
+      }
+    }
+
+    function nextTradeId() {
+      tradeIdCounter += 1;
+      return `TRD-SIM-${tradeIdCounter}`;
+    }
+
+    function submitSimulatedTrade(e) {
+      e.preventDefault();
+      const type = document.getElementById('simStructure').value;
+      const amountCr = parseFloat(document.getElementById('simValuation').value) || 15.0;
+      const p1 = document.getElementById('simPlayer1').value.trim();
+      const t1 = document.getElementById('simTeam1').value;
+      const r1 = document.getElementById('simRole1').value;
+      const p2 = document.getElementById('simPlayer2').value.trim();
+      const t2 = document.getElementById('simTeam2').value;
+      const r2 = document.getElementById('simRole2').value;
+
+      const roleToPose = (role) => {
+        if (role === 'Bowler') return 'bowler';
+        if (role === 'All-Rounder') return 'allrounder';
+        return 'batter';
+      };
+
+      const f1 = FRANCHISES[t1];
+      const f2 = FRANCHISES[t2];
+
+      const created = {
+        id: nextTradeId(),
+        type,
+        label: type === 'SWAP' ? 'Simulated Player Swap' : 'Simulated Cash Transfer',
+        headline: type === 'SWAP' ? `${p1} ⇄ ${p2} Trade` : `${p1} Moves to ${t1}`,
+        amountCr,
+        purseNote: `${t1} Purse -₹${amountCr.toFixed(2)} Cr  •  ${t2} Purse +₹${amountCr.toFixed(2)} Cr`,
+        summary: `Simulated ${type.toLowerCase()} transfer between ${f1?.name || t1} and ${f2?.name || t2} valued at ₹${amountCr.toFixed(2)} Cr.`,
+        left: { name: p1, from: t2, to: t1, role: r1, rating: 92, pose: roleToPose(r1) },
+        right: {
+          name: type === 'CASH' ? 'Purse Credit' : p2,
+          from: t1,
+          to: t2,
+          role: type === 'CASH' ? `₹${amountCr.toFixed(2)} Cr Vault` : r2,
+          rating: 91,
+          pose: type === 'CASH' ? 'vault' : roleToPose(r2)
+        },
+        players: type === 'CASH'
+          ? [{ name: p1, from: t2, to: t1, role: r1, feeCr: amountCr }]
+          : [
+              { name: p1, from: t2, to: t1, role: r1, feeCr: amountCr },
+              { name: p2, from: t1, to: t2, role: r2, feeCr: amountCr },
+            ],
+      };
+
+      trades.unshift(created);
+      closeSimulator();
+      renderFeed();
+    }
+
+    async function init() {
+      fillTeamSelects();
+      try {
+        const res = await fetch('ipl-trades.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error(res.statusText);
+        const data = await res.json();
+        FRANCHISES = data.franchises || {};
+        trades = data.trades || [];
+        milestones = data.milestones || [];
+        meta = {
+          snapshotDate: data.snapshotDate || '',
+          seasonLabel: data.seasonLabel || '',
+          status: data.status || 'POC'
+        };
+        document.getElementById('statusBadge').textContent = `${meta.status} • ${meta.seasonLabel}`.toUpperCase();
+        document.getElementById('snapshotMeta').textContent = meta.snapshotDate ? `SNAPSHOT ${meta.snapshotDate}` : '';
+        if (milestones.length) {
+          document.getElementById('milestoneSection').classList.remove('hidden');
+          startMilestoneClock();
+        }
+        document.getElementById('filterSection').classList.remove('hidden');
+        renderTeamPills();
+        renderFeed();
+      } catch (err) {
+        document.getElementById('statusBadge').textContent = 'OFFLINE';
+        document.getElementById('loadError').classList.add('visible');
+        console.error(err);
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeInspector();
+        closeSimulator();
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
